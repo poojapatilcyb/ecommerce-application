@@ -1,1 +1,33 @@
-<p>cart works!</p>
+<div class="cart-container" *ngIf="cartData.length !== 0; else errorTemplate">
+    <h1>Shopping Cart</h1>
+    <div class="cart-items">
+      <!-- Cart items will be dynamically generated here -->
+      <!-- Example item -->
+      <div class="cart-item" *ngFor="let cart of cartData">
+        <img [src]="cart.img" alt="Product 1">
+        <div class="item-details">
+          <h3>{{cart.name}}</h3>
+          <p>${{cart.price}}</p>
+          <div class="item-actions">
+            <button class="btn-remove" (click)="removeCartItem(cart.id)">Remove</button>
+            <input type="number" class="quantity-input" [value]="cart.count" min="1">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="cart-summary">
+      <h2>Cart Summary</h2>
+      <div class="summary-details">
+        <p>Total Items: <span id="total-items">1</span></p>
+        <p>Total Price: <span id="total-price">${{totalPrice}}</span></p>
+      </div>
+      <button class="btn-checkout">Checkout</button>
+    </div>
+</div>
+<ng-template #errorTemplate>
+    <div class="no-result-found-container">
+        <div class="center-content">
+          <p>No Products Found in cart. Please add product.</p>
+        </div>
+    </div>
+</ng-template>

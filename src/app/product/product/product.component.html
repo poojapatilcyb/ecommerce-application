@@ -1,3 +1,6 @@
+<div class="side-nav">
+    <app-filter></app-filter>
+</div>
 <div style ="display:flex; flex-wrap:wrap; justify-content: space-around; margin-bottom: 10px;" *ngIf="products.length !== 0; else errorTemplate">
     <div class="card" *ngFor="let product of products" style="flex: 0 0 20%;">
         <div class="container">
@@ -16,7 +19,7 @@
     </div>
 </div>
 <ng-template #errorTemplate>
-    <div class="center-container">
+    <div class="no-result-found-container">
         <div class="center-content">
           <p>No Data Found</p>
         </div>

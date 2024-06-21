@@ -41,9 +41,10 @@ export class CategoryComponent implements OnInit, AfterContentChecked{
   }
  
   getCartItemCount(){
-    if(typeof document !== 'undefined') {
-      const itemcount = this.localStorageService.getItem('cartItemCount');
-      this.cartItemCount = itemcount ? JSON.parse(itemcount) : null;
+    let localArray = this.localStorageService.getItem('cartItemIds');
+    if(localArray !== null) {
+      let idsArray: number[] = JSON.parse(localArray);
+      this.cartItemCount = idsArray.length;
     }
   }
 }

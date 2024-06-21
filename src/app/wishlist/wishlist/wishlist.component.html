@@ -1,0 +1,10 @@
+<div style ="display:flex; flex-wrap:wrap;">
+    <div class="card" *ngFor="let product of wishlistData" style="flex: 0 0 30%;">
+        <img [src]="product.img" alt="Avatar" style="width:100%; height: 200px;">
+        <div class="container">
+            <h4><b>{{product.name}}</b></h4>
+            <p>${{product.price}}</p>
+            <p>Rating: {{product.rating}}</p>
+        </div>
+    </div>
+</div>

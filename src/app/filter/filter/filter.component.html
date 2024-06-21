@@ -1,0 +1,55 @@
+<div class="sidebar">
+
+    <div class="filter-container">
+        Enter Brand Name:
+        <input type="text" [(ngModel)]="searchTerm" (input)="filterBrands()" placeholder="Search..." >
+    </div>
+    <div class="rating-container">
+        Ratings:
+        <div *ngFor="let rating of ratings; let i = index" (click)="clickRating(i+1)" class="ratings">
+            <span class="fa fa-star" [ngClass]="{'checked':i+1>=1}"></span>
+            <span class="fa fa-star" [ngClass]="{'checked':i+1>=2}"></span>
+            <span class="fa fa-star" [ngClass]="{'checked':i+1>=3}"></span>
+            <span class="fa fa-star" [ngClass]="{'checked':i+1>=4}"></span>
+            <span class="fa fa-star" [ngClass]="{'checked':i+1>=5}"></span>
+            <span> & Up</span>
+        </div>
+    </div>
+
+    <div class="filter-container">
+        Price range:
+        <div>
+            <select id="options" [(ngModel)]="minPrice" (change)="onMinOptionSelection()">
+               <option *ngFor="let min of minRangeOption" [value]="min">{{ min }}</option>
+            </select>
+        To
+            <select id="options" [(ngModel)]="maxPrice" >
+              <option *ngFor="let max of maxRangeOption" [value]="max">{{ max }}</option>
+              <option value="50001">50000+</option>
+            </select>
+            <span class="btn-apply"> <button (click)="rangeSelectionApply()">Apply</button></span>
+        </div>
+    </div>
+      
+    <div class="multi-select-dropdown">
+        <div class="dropdown">
+          <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+          aria-haspopup="true" aria-expanded="false" (click)="clickoption()">
+            Select Options
+          </button>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" [ngStyle]="{'display' : clickoptionflag ? 'block': 'none'}">
+            <a class="dropdown-item" *ngFor="let option of brandOptions"
+               (click)="onSelect(option)">
+              <input type="checkbox" [checked]="isSelected(option)"> {{ option.name }}
+            </a>
+          </div>
+        </div>
+        <div>
+          <strong>Selected Options:</strong>
+          <div *ngFor="let selectedOption of selectedOptions">
+            {{ selectedOption.name }}
+          </div>
+        </div>
+      </div>
+    
+</div>

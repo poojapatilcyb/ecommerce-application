@@ -1,0 +1,77 @@
+<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
+<!-- * * * * * * * * * * * The content below * * * * * * * * * * * -->
+<!-- * * * * * * * * * * is only a placeholder * * * * * * * * * * -->
+<!-- * * * * * * * * * * and can be replaced.  * * * * * * * * * * -->
+<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
+<!-- * * * * * * * * * Delete the template below * * * * * * * * * -->
+<!-- * * * * * * * to get started with your project! * * * * * * * -->
+<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
+ 
+<style>
+  .header{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+  }
+  .content {
+    width: 100%;
+    min-height: 100%;
+    display: flex;
+    width: 100%;
+    padding: 1rem;
+    box-sizing: inherit;
+    position: relative;
+    background-color: lightblue;
+  }
+ 
+  .angular-logo {
+    margin: 0 20px;
+  }
+ 
+  .company-name {
+    display: flex;
+    font-size: 20px;
+    align-items: center;
+  }
+ 
+  .side-nav {
+    position: fixed;
+    top: 122px;
+    left: 0;
+  }
+ 
+  .router {
+    margin: 140px 0 0 250px;
+  }
+</style>
+ 
+<main class="main">
+  <div class="header">
+  <div class="content">
+    <span class="angular-logo">
+      <a href="/" class="nav-link home">
+        <img src="favicon.ico" width="40" height="40" title="Home" alt="Home" class="ng-star-inserted">
+      </a>
+    </span>
+    <span class="company-name">
+      Company Name
+    </span>
+  </div>
+  <div clss="top-menu">
+    <app-category></app-category>
+  </div>
+  </div>
+  <div class="side-nav">
+    <app-filter></app-filter>
+  </div>
+  <div class="router"><router-outlet /></div>
+</main>
+ 
+<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
+<!-- * * * * * * * * * * * The content above * * * * * * * * * * * * -->
+<!-- * * * * * * * * * * is only a placeholder * * * * * * * * * * * -->
+<!-- * * * * * * * * * * and can be replaced.  * * * * * * * * * * * -->
+<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
+<!-- * * * * * * * * * * End of Placeholder  * * * * * * * * * * * * -->
+<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->

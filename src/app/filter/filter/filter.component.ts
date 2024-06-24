@@ -1,14 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FilterService } from '../../service/filter/filter.service';
 import { Brand } from '../../../Model/brand.model';
 import { BrandService } from '../../service/brand/brand.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-filter',
   templateUrl: './filter.component.html',
   styleUrl: './filter.component.scss'
 })
-export class FilterComponent implements OnInit{
+export class FilterComponent implements OnInit, OnDestroy{
 
   ratings = Array(5).fill(0);
   searchTerm: string = '';
@@ -20,6 +21,9 @@ export class FilterComponent implements OnInit{
   selectedOptions: Brand[] = [];
   brandOptions: Brand[] = [];
   clickoptionflag: boolean = false;
+  errorMessage: string = '';
+  private brandSubscription: Subscription | undefined;
+
   constructor(
     private filterService: FilterService,
     private brandService: BrandService
@@ -50,10 +54,11 @@ export class FilterComponent implements OnInit{
   }
 
   getBrand(){
-    this.brandService.getBrand().subscribe((data)=>{
-      this.brandOptions = data;
-      console.log(this.brandOptions);
-    })
+    this.brandSubscription = this.brandService.getBrand().subscribe({
+        next: (data: Brand[]) => { this.brandOptions = data; },
+        error: (error) => { this.errorMessage = error; },
+        complete: () => { console.log('complete getBrand Observable')}
+    });  
   }
 
   onSelect(option: Brand) {
@@ -72,5 +77,11 @@ export class FilterComponent implements OnInit{
   clickoption(){
     this.clickoptionflag = !this.clickoptionflag
     console.log(this.clickoptionflag);
+  }
+
+  ngOnDestroy(): void {
+    if(this.brandSubscription) {
+      this.brandSubscription.unsubscribe();
+    }
   }
 }

@@ -1,18 +1,20 @@
-import { AfterContentChecked, Component, OnInit } from '@angular/core';
+import { AfterContentChecked, Component, OnDestroy, OnInit } from '@angular/core';
 import { CategoryService } from '../../service/category/category.service';
 import { LocalstorageService } from '../../service/localstorage/localstorage.service';
 import { Category } from '../../../Model/category.model';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-category',
   templateUrl: './category.component.html',
   styleUrl: './category.component.scss'
 })
-export class CategoryComponent implements OnInit, AfterContentChecked{
+export class CategoryComponent implements OnInit, AfterContentChecked, OnDestroy{
   wishlistItemCount: number = 0;
   cartItemCount: number = 0;
   categories: Category[] = [];
-  
+  errorMessage: string = '';
+  private categoriesSubscription: Subscription | undefined;
   constructor(
     private service: CategoryService,
     private localStorageService: LocalstorageService
@@ -23,9 +25,11 @@ export class CategoryComponent implements OnInit, AfterContentChecked{
   }
  
   getCategories(){
-    this.service.getCategories().subscribe((data)=>{
-      this.categories = data;
-    })
+    this.categoriesSubscription = this.service.getCategories().subscribe({
+      next: (data: Category[]) => { this.categories = data; },
+      error: (error) => { this.errorMessage = error; },
+      complete: () => { console.log('complete getBrand Observable')}
+    });
   }
  
   ngAfterContentChecked(): void {
@@ -45,6 +49,12 @@ export class CategoryComponent implements OnInit, AfterContentChecked{
     if(localArray !== null) {
       let idsArray: number[] = JSON.parse(localArray);
       this.cartItemCount = idsArray.length;
+    }
+  }
+
+  ngOnDestroy(): void {
+    if(this.categoriesSubscription) {
+      this.categoriesSubscription.unsubscribe();
     }
   }
 }

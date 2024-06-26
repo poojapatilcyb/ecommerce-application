@@ -104,7 +104,13 @@
             "styles": [
               "src/styles.scss"
             ],
-            "scripts": []
+            "scripts": [],
+            "codeCoverage": true,
+            "sourceMap": true, 
+            "codeCoverageExclude": [
+              "**/*.spec.ts",
+              "**/node_modules/**"
+            ]
           }
         }
       }

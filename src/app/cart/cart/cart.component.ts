@@ -20,7 +20,7 @@ export class CartComponent implements OnInit, OnDestroy {
     private service: ProductService,
     private localStorageService: LocalstorageService
   ){}
- 
+   
   ngOnInit(): void {
     this.getWishlistProducts();
   }
@@ -54,11 +54,11 @@ export class CartComponent implements OnInit, OnDestroy {
                 this.cartData[existingProductIndex].count += count;
             }
           });
+          this.calculateTotal(this.cartData);
         },
         error: (error) => { this.errorMessage = error; },
         complete: () => { console.log('complete getBrand Observable')}
       });
-      this.calculateTotal(this.cartData);
     }
   }
 
@@ -75,9 +75,19 @@ export class CartComponent implements OnInit, OnDestroy {
       const indexToRemove = idsArray.indexOf(id);
       if(indexToRemove>=0) {
         idsArray.splice(indexToRemove, 1);
-        localStorage.setItem('cartItemIds', JSON.stringify(idsArray));
+        this.localStorageService.setItem('cartItemIds', JSON.stringify(idsArray));
         location.reload();
       }
+    }
+  }
+
+  addCartItem(id: number) {
+    let localArray = this.localStorageService.getItem('cartItemIds');
+    if(localArray !== null) {
+      let idsArray: number[] = JSON.parse(localArray);
+      idsArray.push(id);
+      this.localStorageService.setItem('cartItemIds', JSON.stringify(idsArray));
+      location.reload();
     }
   }
 

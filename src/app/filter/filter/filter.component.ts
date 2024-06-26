@@ -22,11 +22,11 @@ export class FilterComponent implements OnInit, OnDestroy{
   brandOptions: Brand[] = [];
   clickoptionflag: boolean = false;
   errorMessage: string = '';
-  private brandSubscription: Subscription | undefined;
+  // private brandSubscription: Subscription | undefined;
 
   constructor(
     private filterService: FilterService,
-    private brandService: BrandService
+    // private brandService: BrandService
   ){
     this.minPrice = 0;
     this.maxPrice = 50001;
@@ -34,7 +34,7 @@ export class FilterComponent implements OnInit, OnDestroy{
   }
 
   ngOnInit(): void {
-    this.getBrand();
+    // this.getBrand();
   }
   clickRating(rating: number) {
     this.filterService.updateRatingsValue(rating);
@@ -53,35 +53,5 @@ export class FilterComponent implements OnInit, OnDestroy{
     this.maxRangeOption = this.maxRangeOption.filter((item)=> item > this.minPrice);
   }
 
-  getBrand(){
-    this.brandSubscription = this.brandService.getBrand().subscribe({
-        next: (data: Brand[]) => { this.brandOptions = data; },
-        error: (error) => { this.errorMessage = error; },
-        complete: () => { console.log('complete getBrand Observable')}
-    });  
-  }
-
-  onSelect(option: Brand) {
-    if (this.selectedOptions.some(product => product.id === option.id)) {
-      this.selectedOptions = this.selectedOptions.filter(item => item.id !== option.id);
-    } else {
-      this.selectedOptions.push(option) ;
-      this.filterService.addSelectedBrandBehaviourSubject(option);
-    }
-  }
-
-  isSelected(option: Brand): boolean {
-    return this.selectedOptions.includes(option);
-  }
-
-  clickoption(){
-    this.clickoptionflag = !this.clickoptionflag
-    console.log(this.clickoptionflag);
-  }
-
-  ngOnDestroy(): void {
-    if(this.brandSubscription) {
-      this.brandSubscription.unsubscribe();
-    }
-  }
+  ngOnDestroy(): void { }
 }

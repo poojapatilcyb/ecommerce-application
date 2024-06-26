@@ -14,7 +14,7 @@ export class CategoryComponent implements OnInit, AfterContentChecked, OnDestroy
   cartItemCount: number = 0;
   categories: Category[] = [];
   errorMessage: string = '';
-  private categoriesSubscription: Subscription | undefined;
+  categoriesSubscription: Subscription | undefined;
   constructor(
     private service: CategoryService,
     private localStorageService: LocalstorageService

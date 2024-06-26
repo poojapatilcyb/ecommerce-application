@@ -9,8 +9,9 @@
           <h3>{{cart.name}}</h3>
           <p>${{cart.price}}</p>
           <div class="item-actions">
-            <button class="btn-remove" (click)="removeCartItem(cart.id)">Remove</button>
-            <input type="number" class="quantity-input" [value]="cart.count" min="1">
+            <button class="btn-remove" (click)="addCartItem(cart.id)">+</button>
+            <input type="number" class="quantity-input" [value]="cart.count" min="1" disabled>
+            <button class="btn-remove" (click)="removeCartItem(cart.id)">-</button>
           </div>
         </div>
       </div>

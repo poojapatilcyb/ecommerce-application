@@ -29,27 +29,5 @@
             </select>
             <span class="btn-apply"> <button (click)="rangeSelectionApply()">Apply</button></span>
         </div>
-    </div>
-      
-    <div class="multi-select-dropdown">
-        <div class="dropdown">
-          <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
-          aria-haspopup="true" aria-expanded="false" (click)="clickoption()">
-            Select Options
-          </button>
-          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" [ngStyle]="{'display' : clickoptionflag ? 'block': 'none'}">
-            <a class="dropdown-item" *ngFor="let option of brandOptions"
-               (click)="onSelect(option)">
-              <input type="checkbox" [checked]="isSelected(option)"> {{ option.name }}
-            </a>
-          </div>
-        </div>
-        <div>
-          <strong>Selected Options:</strong>
-          <div *ngFor="let selectedOption of selectedOptions">
-            {{ selectedOption.name }}
-          </div>
-        </div>
-      </div>
-    
+    </div>   
 </div>

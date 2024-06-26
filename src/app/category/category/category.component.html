@@ -1,15 +1,17 @@
 <ul>
-    <li><a routerLink="/product">All</a></li>
+    <li>
+        <a [routerLink]="['/product']" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">All</a></li>
     <li *ngFor="let category of categories">
         <a routerLinkActive="active" [routerLink]="['/product',category?.id]">{{category?.name}}</a>
     </li>
-    <li style="float:right">
-        <span routerLink="/wishlist">
-                <i class="fa fa-heart" style="font-size:20px; color:#12be3a; margin: 8px 3px;"></i> 
-                <span style="color:aliceblue;margin-right: 15px;"> {{wishlistItemCount? wishlistItemCount : ''}}</span>
-        </span>
-        <span routerLink="/cart">
-            <i class="fa fa-shopping-cart" style="font-size:20px;color: #3495fc; margin: 8px 3px;"></i>
-            <span style="color:aliceblue; margin-right: 15px;"> {{cartItemCount? cartItemCount : ''}}</span></span>
-    </li>
+    <div class="navbar">
+        <div class="button" routerLink="/wishlist">
+            <i class="fa fa-heart icon" ></i> 
+            <span [ngClass]="{'button__badge': wishlistItemCount > 0}">{{wishlistItemCount? wishlistItemCount : ''}}</span>
+        </div>
+        <div class="button" routerLink="/cart" >
+            <i class="fa fa-shopping-cart icon"></i> 
+           <span [ngClass]="{'button__badge': cartItemCount > 0}">{{cartItemCount? cartItemCount : ''}}</span>
+        </div>
+    </div>
 </ul>

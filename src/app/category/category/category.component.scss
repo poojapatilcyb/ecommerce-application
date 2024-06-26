@@ -4,24 +4,58 @@ ul {
     padding: 0;
     overflow: hidden;
     background-color: #333;
+    li {
+      float: left;
+      a {
+        display: block;
+        color: white;
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: none;
+        &:hover:not(.active) {
+          background-color: #111;
+        }
+      }
+    }   
+    .active {
+      background-color: #04AA6D;
+    }
   }
- 
-  li {
-    float: left;
-  }
- 
-  li a {
-    display: block;
+
+  /* Create the blue navigation bar */
+.navbar {
+  font-size: 25px;
+  padding: 5px 10px;
+  float: right;
+  .button {
     color: white;
-    text-align: center;
-    padding: 14px 16px;
-    text-decoration: none;
+    display: inline-block; /* Inline elements with width and height. TL;DR they make the icon buttons stack from left-to-right instead of top-to-bottom */
+    position: relative; /* All 'absolute'ly positioned elements are relative to this one */
+    padding: 2px 5px; /* Add some padding so it looks nice */
+    cursor: pointer;
+    .fa-heart {
+      color:#3495fc;
+      &:hover {
+        color: #0056b3;
+      }
+    }
+    .fa-shopping-cart {
+      color: #20f050;
+      &:hover {
+        color: #188634;
+      }
+    }
+    .button__badge {
+      background-color: #fa3e3e;
+      border-radius: 2px;
+      color: white;
+     
+      padding: 1px 3px;
+      font-size: 10px;
+      
+      position: absolute; /* Position the badge within the relatively positioned button */
+      top: 0;
+      right: 0;
+    }
   }
- 
-  li a:hover:not(.active) {
-    background-color: #111;
-  }
- 
-  .active {
-    background-color: #04AA6D;
-  }
+}

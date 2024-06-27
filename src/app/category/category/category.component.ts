@@ -4,6 +4,7 @@ import { LocalstorageService } from '../../service/localstorage/localstorage.ser
 import { Category } from '../../../Model/category.model';
 import { Subscription } from 'rxjs';
 import { CartService } from '../../service/cart/cart.service';
+import { WishlistService } from '../../service/wishlist/wishlist.service';
 
 @Component({
   selector: 'app-category',
@@ -18,8 +19,8 @@ export class CategoryComponent implements OnInit, AfterContentChecked, OnDestroy
   categoriesSubscription: Subscription | undefined;
   constructor(
     private service: CategoryService,
-    private localStorageService: LocalstorageService,
-    private cartService: CartService
+    private cartService: CartService,
+    private wishlistService: WishlistService
   ) {}
  
   ngOnInit(): void {
@@ -40,15 +41,14 @@ export class CategoryComponent implements OnInit, AfterContentChecked, OnDestroy
   }
  
   getWishlistItemCount(){
-    if(typeof document !== 'undefined') {
-      const itemcount = this.localStorageService.getItem('wishlistItemCount');
-      this.wishlistItemCount = itemcount ? JSON.parse(itemcount) : null;
-    }
+    this.cartService.cartItems$.subscribe((cartItems)=> { 
+      this.cartItemCount = cartItems.length
+    })
   }
  
   getCartItemCount(){
-    this.cartService.cartItems$.subscribe((localArray)=> { 
-      this.cartItemCount = localArray.length
+    this.wishlistService.wishlistItems$.subscribe((wishlistItems)=> { 
+      this.wishlistItemCount = wishlistItems.length
     })
   }
 

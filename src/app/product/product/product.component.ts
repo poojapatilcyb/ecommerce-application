@@ -7,6 +7,7 @@ import { FilterService, MinMaxRange } from '../../service/filter/filter.service'
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import { CartService } from '../../service/cart/cart.service';
+import { WishlistService } from '../../service/wishlist/wishlist.service';
 
 @Component({
   selector: 'app-product',
@@ -27,9 +28,9 @@ export class ProductComponent implements OnInit, OnDestroy{
   constructor(
     private productService: ProductService,
     private route: ActivatedRoute,
-    private localStorageService: LocalstorageService,
     private filterService: FilterService,
-    private cartService: CartService
+    private cartService: CartService,
+    private wishlistService: WishlistService
   ) {}
  
   ngOnInit(): void {
@@ -168,17 +169,18 @@ export class ProductComponent implements OnInit, OnDestroy{
   }
 
   onClickWishlist(id:number){
-    const existingIds = this.localStorageService.getItem('wishlistItemIds');
-    let idsArray: number[] = [];
-    if(existingIds !== null){
-      idsArray = JSON.parse(existingIds);
-      idsArray.includes(id) ? '' : idsArray.push(id);
-      this.localStorageService.setItem('wishlistItemIds', JSON.stringify(idsArray));
-    }else {
-      idsArray.push(id);
-      this.localStorageService.setItem('wishlistItemIds', JSON.stringify(idsArray));
-    }
-    this.localStorageService.setItem('wishlistItemCount', JSON.stringify(idsArray.length));
+    // const existingIds = this.localStorageService.getItem('wishlistItemIds');
+    // let idsArray: number[] = [];
+    // if(existingIds !== null){
+    //   idsArray = JSON.parse(existingIds);
+    //   idsArray.includes(id) ? '' : idsArray.push(id);
+    //   this.localStorageService.setItem('wishlistItemIds', JSON.stringify(idsArray));
+    // }else {
+    //   idsArray.push(id);
+    //   this.localStorageService.setItem('wishlistItemIds', JSON.stringify(idsArray));
+    // }
+    // this.localStorageService.setItem('wishlistItemCount', JSON.stringify(idsArray.length));
+    this.wishlistService.addToWishlist(id);
   }
  
   onClickCart(id:number){

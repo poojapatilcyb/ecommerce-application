@@ -3,6 +3,7 @@ import { Product } from '../../../Model/product.model';
 import { ProductService } from '../../service/product/product.service';
 import { LocalstorageService } from '../../service/localstorage/localstorage.service';
 import { Subscription } from 'rxjs';
+import { WishlistService } from '../../service/wishlist/wishlist.service';
 
 @Component({
   selector: 'app-wishlist',
@@ -15,7 +16,7 @@ export class WishlistComponent implements OnInit, OnDestroy{
   errorMessage: string = 'No products found in wishlist. Please add product.';
   constructor(
     private service: ProductService,
-    private localStorageService: LocalstorageService
+    private wishlistService: WishlistService
   ){}
  
   ngOnInit(): void {
@@ -23,17 +24,17 @@ export class WishlistComponent implements OnInit, OnDestroy{
   }
  
   getWishlistProducts(){
-    let localArray = this.localStorageService.getItem('wishlistItemIds');
-    if(localArray !== null) {
-      let idsArray: number[] = JSON.parse(localArray);
+    this.wishlistService.wishlistItems$.subscribe((idsArray)=> {
       this.productsSubscription = this.service.getProducts().subscribe({
         next: (data: Product[]) => { this.wishlistData = data.filter(item => idsArray?.includes(item.id)); },
         error: (error: string) => { this.errorMessage = error; },
         complete: () => { console.log('complete getProducts Observable')}
       });  
-    }
+    })
   }
-
+  removeFromWishlistItem(id: number) {
+    this.wishlistService.removeFromWishlist(id);
+  }
   ngOnDestroy(): void {
     this.productsSubscription?.unsubscribe();
   }

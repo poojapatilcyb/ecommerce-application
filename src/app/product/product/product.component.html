@@ -6,7 +6,8 @@
         <div *ngFor="let product of products" style="flex: 0 0 25%;">
             <app-card
             [showWishlistButtonFlag] = true
-            [showAddToCarttButtonflaf] = true
+            [showAddToCartButtonflag] = true
+            [showRemoveWishlistItemButtonflag] = false
             [product] = product
             (onClickWishlistEvent) = "onClickWishlist($event)"
             (onClickCartEvent) = "onClickCart($event)"

@@ -56,29 +56,31 @@
             border-radius: 4px;
             cursor: pointer;
             transition: background-color 0.3s ease;
-            width: 100%
+            width: 100%;
+            color: white;
         }
         
         .btn-cart {
             background-color: #3495fc;
-            color: white;
+            &:hover {
+                background-color: #0056b3; /* Darker shade for hover effect */
+            }
+        }
+
+        .btn-remove-wishlist {
+            background-color: #f17070;
+            &:hover {
+                background-color: #9c0808;
+            }
         }
         
         .btn-wishlist {
             background-color: #12be3a;
-            color: white;
-            margin-left: 8px; /* Adjust margin between buttons */
-        }
-        
-        .btn-cart:hover {
-            background-color: #0056b3; /* Darker shade for hover effect */
-        }
-
-        .btn-wishlist:hover {
-            background-color: #188634; /* Darker shade for hover effect */
+            &:hover {
+                background-color: #188634; /* Darker shade for hover effect */
+            }
         }
       }
-
   }
   .m-1 {
     margin: 8px;

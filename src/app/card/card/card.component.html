@@ -7,8 +7,9 @@
         <div class="m-1">${{product.price}}</div>
         <div class="m-1"><div class="rating">{{product.rating}} <span class="fa fa-star"></span> </div></div>
         <div class="m-1" class="button-container">
-            <button *ngIf="showWishlistButtonFlag" class="btn btn-cart" (click)="onClickWishlist(product.id)"><i class="fa fa-heart" style="font-size:15px;margin: 3px;"></i>Wishlist</button>
-            <button *ngIf="showAddToCarttButtonflaf" class="btn btn-wishlist" (click)="onClickCart(product.id)"><i class="fa fa-shopping-cart" style="font-size:15px;margin: 3px;"></i>Cart</button>
+            <button *ngIf="showWishlistButtonFlag" class="btn btn-wishlist m-1" (click)="onClickWishlist(product.id)"><i class="fa fa-heart" style="font-size:15px;margin: 3px;"></i>Wishlist</button>
+            <button *ngIf="showAddToCartButtonflag" class="btn btn-cart m-1"  (click)="onClickCart(product.id)"><i class="fa fa-shopping-cart" style="font-size:15px;margin: 3px;"></i>Cart</button>
+            <button *ngIf="showRemoveWishlistItemButtonflag" class="btn btn-remove-wishlist m-1" (click)="onRemovefromWishlist(product.id)">Remove</button>
         </div>
     </div>
 </div>

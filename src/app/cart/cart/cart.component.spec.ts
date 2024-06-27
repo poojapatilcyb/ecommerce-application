@@ -1,10 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { HttpClientModule, HttpClient } from '@angular/common/http'; // Import HttpClientModule and HttpClient
+import { HttpClientModule } from '@angular/common/http'; // Import HttpClientModule and HttpClient
 
 import { CartComponent } from './cart.component';
 import { ProductService } from '../../service/product/product.service';
-import { LocalstorageService } from '../../service/localstorage/localstorage.service';
+import { CartService } from '../../service/cart/cart.service';
 
 describe('CartComponent', () => {
   let component: CartComponent;
@@ -17,7 +17,7 @@ describe('CartComponent', () => {
       imports: [HttpClientModule, HttpClientTestingModule],
       providers: [
         ProductService,
-        LocalstorageService
+        CartService
       ]
     })
     .compileComponents();

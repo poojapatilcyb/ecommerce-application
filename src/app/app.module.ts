@@ -9,6 +9,8 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
 import { CategoryModule } from "./category/category.module";
 import { FilterModule } from "./filter/filter.module";
 import { ErrorHandlerInterceptor } from './service/interceptors/error-handler.service';
+import { StoreModule } from '@ngrx/store';
+import { CardModule } from './card/card.module';
 
 @NgModule({
   declarations: [
@@ -20,8 +22,10 @@ import { ErrorHandlerInterceptor } from './service/interceptors/error-handler.se
     HttpClientModule,
     CommonModule,
     CategoryModule,
+    CardModule,
     FilterModule,
-    AppRoutingModule
+    AppRoutingModule,
+    StoreModule.forRoot({}, {})
   ],
   providers: [
     provideClientHydration(),

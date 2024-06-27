@@ -3,6 +3,7 @@ import { CategoryService } from '../../service/category/category.service';
 import { LocalstorageService } from '../../service/localstorage/localstorage.service';
 import { Category } from '../../../Model/category.model';
 import { Subscription } from 'rxjs';
+import { CartService } from '../../service/cart/cart.service';
 
 @Component({
   selector: 'app-category',
@@ -17,7 +18,8 @@ export class CategoryComponent implements OnInit, AfterContentChecked, OnDestroy
   categoriesSubscription: Subscription | undefined;
   constructor(
     private service: CategoryService,
-    private localStorageService: LocalstorageService
+    private localStorageService: LocalstorageService,
+    private cartService: CartService
   ) {}
  
   ngOnInit(): void {
@@ -45,11 +47,9 @@ export class CategoryComponent implements OnInit, AfterContentChecked, OnDestroy
   }
  
   getCartItemCount(){
-    let localArray = this.localStorageService.getItem('cartItemIds');
-    if(localArray !== null) {
-      let idsArray: number[] = JSON.parse(localArray);
-      this.cartItemCount = idsArray.length;
-    }
+    this.cartService.cartItems$.subscribe((localArray)=> { 
+      this.cartItemCount = localArray.length
+    })
   }
 
   ngOnDestroy(): void {

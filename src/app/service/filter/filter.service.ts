@@ -8,14 +8,13 @@ import { Brand } from '../../../Model/brand.model';
 
 export class FilterService {
   private filterSubject = new Subject<string>();
-  private ratingSubject = new Subject<number>();
-  private minMaxSubject = new Subject<MinMaxRange>();
-  private brands: Brand[] = []; // Array to hold subjects
-  private selectedBrandBehaviourSubject: BehaviorSubject<Brand[]>; // BehaviorSubject to emit changes
   filter$ = this.filterSubject.asObservable();
 
+  private ratingSubject = new Subject<number>();
+  private minMaxSubject = new Subject<MinMaxRange>();
+  private brandFilterSubject = new Subject<number>(); // BehaviorSubject to emit changes
+
   constructor(){
-    this.selectedBrandBehaviourSubject = new BehaviorSubject<Brand[]>(this.brands);
   }
 
   updateFilter(filterValue: string) {
@@ -33,12 +32,11 @@ export class FilterService {
   getRateRangeFilter() {
     return this.minMaxSubject.asObservable();
   }
-  getselectedBrandBehaviourSubject(): Observable<Brand[]> {
-    return this.selectedBrandBehaviourSubject.asObservable();
+  getselectedBrandFilter(): Observable<number> {
+    return this.brandFilterSubject.asObservable();
   }
-  addSelectedBrandBehaviourSubject(subject: Brand): void {
-    this.brands.push(subject); // Push object into array
-    this.selectedBrandBehaviourSubject.next(this.brands); // Emit new array to subscribers
+  addSelectedBrandFilter(id: number): void {
+    this.brandFilterSubject.next(id);
   }
 }
 

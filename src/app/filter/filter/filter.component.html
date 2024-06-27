@@ -1,9 +1,10 @@
 <div class="sidebar">
 
     <div class="filter-container">
-        Enter Brand Name:
+        Enter Product Name:
         <input type="text" [(ngModel)]="searchTerm" (input)="filterBrands()" placeholder="Search..." >
     </div>
+
     <div class="rating-container">
         Ratings:
         <div *ngFor="let rating of ratings; let i = index" (click)="clickRating(i+1)" class="ratings">
@@ -30,4 +31,20 @@
             <span class="btn-apply"> <button (click)="rangeSelectionApply()">Apply</button></span>
         </div>
     </div>   
+
+    
+    <div class="custom-select">
+      <div class="select-dropdown">
+        <input type="text" placeholder="Search fruits" [(ngModel)]="searchbrandTerm" (click)="toggleDropdown()" (keyup)="filterProducts()">
+      </div>
+        <select multiple (click)="onselectbrand($event)" [ngClass]="{'d-block':toggleDropdownFlag, 'd-none': !toggleDropdownFlag}">
+          <ng-container *ngIf="brandOptions.length > 0; else noOptions">
+            <option>Select fruits</option>
+            <option *ngFor="let brand of brandOptions" [value]="brand.id">{{ brand.name }}</option>
+          </ng-container>
+          <ng-template #noOptions>
+              <option>No brands available.</option>
+          </ng-template>
+        </select>
+    </div>
 </div>

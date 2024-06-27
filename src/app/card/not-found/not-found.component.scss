@@ -1,0 +1,13 @@
+.no-result-found-container {
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    height: 100%; /* Full viewport height */
+    .center-content {
+        text-align: center; /* Optionally center text within the div */
+        padding: 20px; /* Adjust padding as needed */
+        border: 1px solid #ccc; /* Optional border for visualization */
+        background-color: #f0f0f0; /* Optional background color */
+        color: red;
+    }
+}

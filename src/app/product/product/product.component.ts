@@ -6,6 +6,7 @@ import { LocalstorageService } from '../../service/localstorage/localstorage.ser
 import { FilterService, MinMaxRange } from '../../service/filter/filter.service';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
+import { CartService } from '../../service/cart/cart.service';
 
 @Component({
   selector: 'app-product',
@@ -17,7 +18,7 @@ export class ProductComponent implements OnInit, OnDestroy{
   products: Product[] = [];
   categoryId: string | null = null;
   rating: number = 0;
-  errorMessage: string = '';
+  errorMessage: string = 'No Data Found';
   private productSubscription: Subscription | undefined;
   private categroywiseProductsSubscription: Subscription | undefined;
   private filterProductsSubscription: Subscription | undefined;
@@ -27,7 +28,8 @@ export class ProductComponent implements OnInit, OnDestroy{
     private productService: ProductService,
     private route: ActivatedRoute,
     private localStorageService: LocalstorageService,
-    private filterService: FilterService
+    private filterService: FilterService,
+    private cartService: CartService
   ) {}
  
   ngOnInit(): void {
@@ -45,7 +47,7 @@ export class ProductComponent implements OnInit, OnDestroy{
       complete: () => { console.log('complete getProducts Observable')}
     });
 
-    // filter the product kist based on filter string
+    // filter the product list based on filter string
     this.filterService.filter$.pipe(
       debounceTime(500),
       distinctUntilChanged(),
@@ -78,22 +80,13 @@ export class ProductComponent implements OnInit, OnDestroy{
       complete: () => { console.log('complete getProducts Observable')}
     });
 
-    // this.filterService.getselectedBrandBehaviourSubject().subscribe((data) => {
-    //   console.log(data);
-    //   if(data){
-    //     this.productService.getProducts().subscribe(product =>{
-    //       // data.map((selectedBrand) => { console.log(selectedBrand.id)
-    //       //   this.products = product.filter((prod)=> { console.log(prod.id)
-    //       //     return selectedBrand.id == prod.brand_id;
-    //       //   })
-    //       // })
-    //       this.products = product.filter(product =>
-    //         data.some(brand => brand.id === product.brand_id)
-    //       );           
-    //     })
-    //   }
-      
-    // })
+    // get productlist according to brands
+    this.filterService.getselectedBrandFilter().subscribe({
+      next: (brandId: number)=> {
+        this.getBrandsProducts(brandId);},
+      error: (error: string) => { this.errorMessage = error; },
+      complete: () => { console.log('complete getProducts Observable')}
+      });
   }
  
   getProducts(){
@@ -152,6 +145,15 @@ export class ProductComponent implements OnInit, OnDestroy{
     });  
   }
 
+  getBrandsProducts(brand_id: number) {
+    this.productService.getProducts().subscribe({
+      next: (product: Product[]) => {
+        this.products = product.filter(product => product.brand_id === brand_id ); 
+      },
+      error: (error: string) => { this.errorMessage = error; },
+      complete: () => { console.log('complete filterProducts Observable')}
+    });  
+  }
   getDescriptionStyle(): { [key: string]: string } {
     // Example: Conditionally apply styles based on description length
     const maxLines = 3;
@@ -180,14 +182,7 @@ export class ProductComponent implements OnInit, OnDestroy{
   }
  
   onClickCart(id:number){
-    const existingIds = this.localStorageService.getItem('cartItemIds');
-    let idsArray: number[] = [];
-    if(existingIds !== null){
-      idsArray = JSON.parse(existingIds);
-    }
-      idsArray.push(id);
-      this.localStorageService.setItem('cartItemIds', JSON.stringify(idsArray));
-      this.localStorageService.setItem('cartItemCount', JSON.stringify(idsArray.length));
+    this.cartService.addToCart(id);
   }
 
   ngOnDestroy(): void {

@@ -36,6 +36,8 @@ export class WishlistComponent implements OnInit, OnDestroy{
     this.wishlistService.removeFromWishlist(id);
   }
   ngOnDestroy(): void {
-    this.productsSubscription?.unsubscribe();
+    if(this.productsSubscription){
+      this.productsSubscription?.unsubscribe();
+    }
   }
 }

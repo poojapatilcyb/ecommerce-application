@@ -21,6 +21,10 @@ const routes: Routes = [
     loadChildren: () => import('./cart/cart.module').then(m=>m.CartModule)
   },
   {
+    path: 'counter',
+    loadChildren: () => import('./counter/counter.module').then(m=>m.CounterModule)
+  },
+  {
     path: '**',
     component: PageNotFoundComponent
   }

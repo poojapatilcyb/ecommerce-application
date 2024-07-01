@@ -13,7 +13,7 @@ import { counterReducer } from './counter.reducer';
   ],
   imports: [
     CommonModule,
-    StoreModule.forRoot({ count: counterReducer }),
+    // StoreModule.forRoot({ count: counterReducer }),
     CounterRoutingModule
   ]
 })

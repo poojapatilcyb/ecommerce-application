@@ -25,6 +25,10 @@ const routes: Routes = [
     loadChildren: () => import('./counter/counter.module').then(m=>m.CounterModule)
   },
   {
+    path: 'book',
+    loadChildren: () => import('./ngrx-books/ngrx-books.module').then(m=>m.NgrxBooksModule)
+  },
+  {
     path: '**',
     component: PageNotFoundComponent
   }

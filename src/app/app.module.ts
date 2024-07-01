@@ -11,7 +11,10 @@ import { FilterModule } from "./filter/filter.module";
 import { ErrorHandlerInterceptor } from './service/interceptors/error-handler.service';
 import { StoreModule } from '@ngrx/store';
 import { CardModule } from './card/card.module';
-
+import { counterReducer } from '../app/counter/counter.reducer';
+import { EffectsModule } from '@ngrx/effects';
+import { booksReducer } from './ngrx-books/state/books.reducer';
+import { collectionReducer } from './ngrx-books/state/collection.reducer';
 @NgModule({
   declarations: [
     AppComponent,
@@ -25,7 +28,14 @@ import { CardModule } from './card/card.module';
     CardModule,
     FilterModule,
     AppRoutingModule,
-    StoreModule.forRoot({}, {})
+    StoreModule.forRoot(
+      {
+        count: counterReducer,
+        books: booksReducer,
+        collection: collectionReducer
+      }
+    ),
+    EffectsModule.forRoot([])
   ],
   providers: [
     provideClientHydration(),

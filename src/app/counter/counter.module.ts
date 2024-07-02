@@ -5,14 +5,18 @@ import { CounterRoutingModule } from './counter-routing.module';
 import { CounterComponent } from './counter/counter.component';
 import { StoreModule } from '@ngrx/store';
 import { counterReducer } from './counter.reducer';
+import { CustomCounterComponent } from './custom-counter/custom-counter.component';
+import { FormsModule } from '@angular/forms';
 
 
 @NgModule({
   declarations: [
-    CounterComponent
+    CounterComponent,
+    CustomCounterComponent
   ],
   imports: [
     CommonModule,
+    FormsModule,
     // StoreModule.forRoot({ count: counterReducer }),
     CounterRoutingModule
   ]

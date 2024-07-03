@@ -29,6 +29,10 @@ const routes: Routes = [
     loadChildren: () => import('./ngrx-books/ngrx-books.module').then(m=>m.NgrxBooksModule)
   },
   {
+    path: 'user',
+    loadChildren: () => import('./user/user.module').then(m=>m.UserModule)
+  },
+  {
     path: '**',
     component: PageNotFoundComponent
   }

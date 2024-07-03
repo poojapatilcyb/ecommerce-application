@@ -1,0 +1,14 @@
+<h3 style="margin: 20px;">Add User</h3>
+<form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+    <div style="margin: 20px;">
+        <label for="first-name">Name: </label>
+        <input id="first-name" type="text" formControlName="name">
+    </div>
+    <div style="margin: 20px;">
+        <label for="last-name"> Email: </label>
+        <input id="last-name" type="text" formControlName="email">
+    </div>
+    <div style="margin: 20px;">
+        <button type="submit">Submit</button>
+    </div>
+</form>

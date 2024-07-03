@@ -1,0 +1,29 @@
+<a routerLinkActive="active" routerLink="/user/list/add">Add User</a>
+<div style=" display:flex; flex-direction: row;">
+<table style="flex: 50%; border:1px solid black" >
+    <tbody>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Email</th>
+        </tr>
+        @for (user of users; track $index) {
+            <tr>
+                <td>
+                    {{$index + 1}}
+                </td>
+                <td>
+                    {{user.name}}
+                </td>
+                <td>
+                    {{user.email}}
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div  style="flex: 50%;">
+    <router-outlet></router-outlet>
+</div>
+</div>

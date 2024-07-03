@@ -11,6 +11,7 @@ import { FilterModule } from "./filter/filter.module";
 import { ErrorHandlerInterceptor } from './service/interceptors/error-handler.service';
 import { StoreModule } from '@ngrx/store';
 import { CardModule } from './card/card.module';
+import { EffectsModule } from '@ngrx/effects';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { CardModule } from './card/card.module';
     CardModule,
     FilterModule,
     AppRoutingModule,
-    StoreModule.forRoot({}, {})
+    StoreModule.forRoot({}, {}),
+    EffectsModule.forRoot([])
   ],
   providers: [
     provideClientHydration(),

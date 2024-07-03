@@ -5,9 +5,13 @@ import { ActivatedRoute } from '@angular/router';
 import { LocalstorageService } from '../../service/localstorage/localstorage.service';
 import { FilterService, MinMaxRange } from '../../service/filter/filter.service';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription, of } from 'rxjs';
 import { CartService } from '../../service/cart/cart.service';
 import { WishlistService } from '../../service/wishlist/wishlist.service';
+import { Store } from '@ngrx/store';
+import * as ProductActions from '../../state/product.action';
+import * as ProductSelector from '../../state/product.selector';
+import { ProductState } from '../../state/product.state';
 
 @Component({
   selector: 'app-product',
@@ -19,6 +23,7 @@ export class ProductComponent implements OnInit, OnDestroy{
   products: Product[] = [];
   categoryId: string | null = null;
   rating: number = 0;
+  productStore$: Observable<Product[]> = of([]);
   errorMessage: string = 'No Data Found';
   private productSubscription: Subscription | undefined;
   private categroywiseProductsSubscription: Subscription | undefined;
@@ -30,7 +35,8 @@ export class ProductComponent implements OnInit, OnDestroy{
     private route: ActivatedRoute,
     private filterService: FilterService,
     private cartService: CartService,
-    private wishlistService: WishlistService
+    private wishlistService: WishlistService,
+    private store: Store<{ cart: {product: Product[]}}>
   ) {}
  
   ngOnInit(): void {
@@ -91,11 +97,17 @@ export class ProductComponent implements OnInit, OnDestroy{
   }
  
   getProducts(){
-    this.productSubscription = this.productService.getProducts().subscribe({
-      next: (data: Product[]) => { this.products = data; return this.products;},
-      error: (error: string) => { this.errorMessage = error; },
-      complete: () => { console.log('complete getProducts Observable')}
-  });  
+  //   this.productSubscription = this.productService.getProducts().subscribe({
+  //     next: (data: Product[]) => { 
+  //       this.products = data; return this.products;
+  //     },
+  //     error: (error: string) => { this.errorMessage = error; },
+  //     complete: () => { console.log('complete getProducts Observable')}
+  // });  
+        this.store.dispatch(ProductActions.loadProduct());
+        console.log(this.store.select(ProductSelector.selectAllProducts));
+        this.store.select(ProductSelector.selectAllProducts).subscribe((data)=>console.log(data));
+        this.productStore$ = this.store.select(ProductSelector.selectAllProducts);
   }
  
   getCategroywiseProducts(){

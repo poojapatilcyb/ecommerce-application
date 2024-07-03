@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, isDevMode } from '@angular/core';
 import { BrowserModule, provideClientHydration } from '@angular/platform-browser';
 import { HTTP_INTERCEPTORS, HttpClientModule, provideHttpClient, withFetch } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
@@ -15,6 +15,9 @@ import { counterReducer } from '../app/counter/counter.reducer';
 import { EffectsModule } from '@ngrx/effects';
 import { booksReducer } from './ngrx-books/state/books.reducer';
 import { collectionReducer } from './ngrx-books/state/collection.reducer';
+import { productReducer } from './state/product.reducer';
+import { ProductEffect } from './state/product.effect';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 @NgModule({
   declarations: [
     AppComponent,
@@ -32,10 +35,14 @@ import { collectionReducer } from './ngrx-books/state/collection.reducer';
       {
         count: counterReducer,
         books: booksReducer,
-        collection: collectionReducer
+        collection: collectionReducer,
+        product: productReducer
       }
     ),
-    EffectsModule.forRoot([])
+    EffectsModule.forRoot([
+      ProductEffect
+    ]),
+    StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: !isDevMode() })
   ],
   providers: [
     provideClientHydration(),

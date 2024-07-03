@@ -4,4 +4,5 @@ export const increment = createAction('[Counter Component] Increment');
 export const decrement = createAction('[Counter Component] Decrement');
 export const reset = createAction('[Counter Component] Reset');
 
-export const customIncrement = createAction('[Counter Component] customIncrement', props<{incrementCountValue: number}>())
+export const customIncrement = createAction('[Counter Component] customIncrement', props<{incrementCountValue: number}>());
+export const updateUserName = createAction('[Counter Component] updateUserName', props<{updatedValue: string}>());

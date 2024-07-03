@@ -1,4 +1,4 @@
-<div class="side-nav">
+<!-- <div class="side-nav">
     <app-filter></app-filter>
 </div>
 <div *ngIf="products.length !== 0; else errorTemplate">
@@ -19,4 +19,8 @@
     <app-not-found
     [msg]= errorMessage>
     </app-not-found>
-</ng-template>
+</ng-template> -->
+{{productStore$ | async}}
+@for (item of productStore$ | async; track $index) {
+    <div>{{item.name}}</div>
+}

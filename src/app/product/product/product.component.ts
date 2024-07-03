@@ -8,6 +8,9 @@ import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import { CartService } from '../../service/cart/cart.service';
 import { WishlistService } from '../../service/wishlist/wishlist.service';
+import { Store } from '@ngrx/store';
+import { appState } from '../../store/app.state';
+import { getProductData } from '../state/product.selector';
 
 @Component({
   selector: 'app-product',
@@ -30,7 +33,8 @@ export class ProductComponent implements OnInit, OnDestroy{
     private route: ActivatedRoute,
     private filterService: FilterService,
     private cartService: CartService,
-    private wishlistService: WishlistService
+    private wishlistService: WishlistService,
+    private store: Store<appState>
   ) {}
  
   ngOnInit(): void {
@@ -91,11 +95,16 @@ export class ProductComponent implements OnInit, OnDestroy{
   }
  
   getProducts(){
-    this.productSubscription = this.productService.getProducts().subscribe({
-      next: (data: Product[]) => { this.products = data; return this.products;},
-      error: (error: string) => { this.errorMessage = error; },
-      complete: () => { console.log('complete getProducts Observable')}
-  });  
+    // Implementated get productdata by using store
+    this.store.select(getProductData).subscribe((data)=>{
+      this.products = data;
+    });
+    //  implementation by using service
+    /*   this.productSubscription = this.productService.getProducts().subscribe({
+        next: (data: Product[]) => { this.products = data; return this.products;},
+        error: (error: string) => { this.errorMessage = error; },
+        complete: () => { console.log('complete getProducts Observable')}
+    }); */  
   }
  
   getCategroywiseProducts(){

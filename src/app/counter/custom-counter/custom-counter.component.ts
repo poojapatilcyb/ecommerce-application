@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { CounterState } from '../counter.state';
-import { customIncrement } from '../counter.actions';
-import { getUserName } from '../counter.selector';
-import * as counterActions from '../counter.actions'
+import { CounterState } from '../state/counter.state';
+import { customIncrement } from '../state/counter.actions';
+import { getUserName } from '../state/counter.selector';
+import * as counterActions from '../state/counter.actions'
+import { AppState } from '../../app.state';
 @Component({
   selector: 'app-custom-counter',
   templateUrl: './custom-counter.component.html',
@@ -13,7 +14,7 @@ export class CustomCounterComponent implements OnInit{
   value: number = 0;
   username: string = '';
   uservalue: string = '';
-  constructor(private store: Store<{ count: CounterState}>){}
+  constructor(private store: Store<AppState>){}
 
   ngOnInit(): void {
     this.store.select(getUserName).subscribe((data)=> {

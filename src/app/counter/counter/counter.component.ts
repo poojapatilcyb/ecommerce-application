@@ -1,9 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable, Subscription, of } from 'rxjs';
-import { increment, decrement, reset } from '../counter.actions';
-import { CounterState } from '../counter.state';
-import { getCounter } from '../counter.selector';
+import { increment, decrement, reset } from '../state/counter.actions';
+import { getCounter } from '../state/counter.selector';
+import { AppState } from '../../app.state';
 
 @Component({
   selector: 'app-counter',
@@ -14,7 +14,7 @@ export class CounterComponent implements OnInit, OnDestroy{
   // count$: Observable<{counter: number}> = of({counter: 0});
   count: number = 0;
   counterSubscription: Subscription |undefined;
-  constructor(private store: Store<{ count: CounterState}>) {
+  constructor(private store: Store<AppState>) {
 
   }
   ngOnInit(): void {

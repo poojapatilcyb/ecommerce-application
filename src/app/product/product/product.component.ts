@@ -11,7 +11,7 @@ import { WishlistService } from '../../service/wishlist/wishlist.service';
 import { Store } from '@ngrx/store';
 import * as ProductActions from '../../state/product.action';
 import * as ProductSelector from '../../state/product.selector';
-import { ProductState } from '../../state/product.state';
+import { AppState } from '../../app.state';
 
 @Component({
   selector: 'app-product',
@@ -36,7 +36,7 @@ export class ProductComponent implements OnInit, OnDestroy{
     private filterService: FilterService,
     private cartService: CartService,
     private wishlistService: WishlistService,
-    private store: Store<{ cart: {product: Product[]}}>
+    private store: Store<AppState>
   ) {}
  
   ngOnInit(): void {

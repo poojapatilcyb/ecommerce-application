@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, isDevMode } from '@angular/core';
 import { BrowserModule, provideClientHydration } from '@angular/platform-browser';
 import { HTTP_INTERCEPTORS, HttpClientModule, provideHttpClient, withFetch } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
@@ -12,6 +12,7 @@ import { ErrorHandlerInterceptor } from './service/interceptors/error-handler.se
 import { StoreModule } from '@ngrx/store';
 import { CardModule } from './card/card.module';
 import { EffectsModule } from '@ngrx/effects';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { EffectsModule } from '@ngrx/effects';
     FilterModule,
     AppRoutingModule,
     StoreModule.forRoot({}, {}),
-    EffectsModule.forRoot([])
+    EffectsModule.forRoot([]),
+    StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: !isDevMode() })
   ],
   providers: [
     provideClientHydration(),

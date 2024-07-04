@@ -14,10 +14,28 @@ export const _userReducer = createReducer(
     on(userAction.addUser, (state, action) => {
 
         let post = {...action.user};
-        // post.id = (state.user.length +1 ).toString();
+        post.id = (state.user.length + 1 ).toString();
         return {
             ...state,
             user: [...state.user, post]
+        }
+    }),
+
+    on(userAction.updateUser, (state, action) => {
+        const updatedPost = state.user.map((user)=> {
+            return action.user.id === user.id ? action.user : user 
+        })
+        return {
+            ...state,
+            user: updatedPost
+        }
+    }),
+
+    on(userAction.deleteUser, (state, action) => {
+        const updatedPost = state.user.filter((user)=> user.id !== action.id)
+        return {
+            ...state,
+            user: updatedPost
         }
     }),
 )

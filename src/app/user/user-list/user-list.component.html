@@ -6,6 +6,7 @@
             <th>Id</th>
             <th>Name</th>
             <th>Email</th>
+            <th>Action</th>
         </tr>
         @for (user of users; track $index) {
             <tr>
@@ -17,6 +18,11 @@
                 </td>
                 <td>
                     {{user.email}}
+                </td>
+                <td>
+                    <button [routerLink]="['edit', user.id]">update</button>&nbsp;
+                    <button (click)="delete(user)">delete</button>
+
                 </td>
             </tr>
         }

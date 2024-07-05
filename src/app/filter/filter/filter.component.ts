@@ -77,12 +77,10 @@ export class FilterComponent implements OnInit, OnDestroy{
     });  
   }
   onselectbrand(event: Event) {
-    console.log((event.target  as HTMLInputElement).value);
     this.filterService.addSelectedBrandFilter(parseInt((event.target  as HTMLInputElement).value));
   }
   toggleDropdown() {
     this.toggleDropdownFlag = !this.toggleDropdownFlag;
-    console.log(this.toggleDropdownFlag);
   }
   ngOnDestroy(): void { }
 }

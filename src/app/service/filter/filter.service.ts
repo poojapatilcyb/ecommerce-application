@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { Brand } from '../../../Model/brand.model';
+import { Observable, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'

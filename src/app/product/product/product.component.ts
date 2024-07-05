@@ -3,12 +3,12 @@ import { Product } from '../../../Model/product.model';
 import { ActivatedRoute } from '@angular/router';
 import { FilterService } from '../../service/filter/filter.service';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription, of } from 'rxjs';
 import { CartService } from '../../service/cart/cart.service';
 import { WishlistService } from '../../service/wishlist/wishlist.service';
 import { Store } from '@ngrx/store';
 import * as ProductSelector from '../state/product.selector';
-import { loadProduct, loadProductByCategoryId } from '../state/product.action';
+import { loadProduct, loadProductsByGivenId, loadProductByNameFilter, loadProductByRatings, loadProductByRateRange} from '../state/product.action';
 import { appState } from '../../store/app.state';
 
 @Component({
@@ -16,18 +16,14 @@ import { appState } from '../../store/app.state';
   templateUrl: './product.component.html',
   styleUrl: './product.component.scss'
 })
-export class ProductComponent implements OnInit, OnDestroy{
+export class ProductComponent implements OnInit{
   cartItemCount: number = 0;
-  products: Product[] = [];
+  products$: Observable<Product[]> = of([]);
+  errorMessage$: Observable<string | null> = of('');
   categoryId: string | null = null;
   rating: number = 0;
-  errorMessage: string = 'No Data Found';
-  private productSubscription: Subscription | undefined;
-  private categroywiseProductsSubscription: Subscription | undefined;
-  private filterProductsSubscription: Subscription | undefined;
-  private ratingsProductsSubscription: Subscription | undefined;
-  private RateRangeProductsSubscription: Subscription | undefined;
-  constructor(
+  errorMessage: string = '';
+constructor(
     private route: ActivatedRoute,
     private filterService: FilterService,
     private cartService: CartService,
@@ -63,18 +59,20 @@ export class ProductComponent implements OnInit, OnDestroy{
  
   getProducts(){
     this.store.dispatch(loadProduct());
-    this.store.select(ProductSelector.selectAllProducts).subscribe((data)=> {
-        this.products = data;
-    });
+    this.loadAllProducts();
+  }
+
+  loadAllProducts(){
+    this.products$ =  this.store.select(ProductSelector.selectAllProducts);
+    this.errorMessage$ = this.store.select(ProductSelector.selectProductError);
+    this.store.select(ProductSelector.selectProductError).subscribe((err)=> this.errorMessage = err? err : 'No Product Found!!!')
   }
  
   getCategroywiseProducts(){
     if(this.categoryId) {
       let params = {'categoryId' : this.categoryId}
-      this.store.dispatch(loadProductByCategoryId({ 'categoryId': params }));
-      this.store.select(ProductSelector.selectAllProducts).subscribe((data)=> {
-        this.products = data;
-      });
+      this.store.dispatch(loadProductsByGivenId({ id: params }));
+      this.loadAllProducts();
     } 
   }
 
@@ -85,15 +83,8 @@ export class ProductComponent implements OnInit, OnDestroy{
     ).subscribe({
       next: (filterValue)=> {
       if(filterValue) {
-        this.store.select(ProductSelector.selectAllProducts).subscribe({
-          next: (product: Product[]) => {
-            this.products = product.filter(product =>
-            product.name.toLowerCase().includes(filterValue.toLowerCase())
-            ); 
-          },
-          error: (error: string) => { this.errorMessage = error; },
-          complete: () => { console.log('complete filterProducts Observable')}
-        }); 
+        this.store.dispatch(loadProductByNameFilter({ name: filterValue }));
+        this.loadAllProducts();
       }}
     }); 
   }
@@ -102,13 +93,8 @@ export class ProductComponent implements OnInit, OnDestroy{
     this.filterService.getRatingsValue().subscribe({
       next: (rating: number)=> {
       if(rating > 0) {
-        this.ratingsProductsSubscription = this.store.select(ProductSelector.selectAllProducts).subscribe({
-          next: (product: Product[]) => {
-            this.products = product.filter(item => item?.rating >= rating);
-          },
-          error: (error: string) => { this.errorMessage = error; },
-          complete: () => { console.log('complete filterProducts Observable')}
-        });  
+        this.store.dispatch(loadProductByRatings({ rating: rating }));
+        this.loadAllProducts();
       }}
     });
   }
@@ -117,20 +103,8 @@ export class ProductComponent implements OnInit, OnDestroy{
     this.filterService.getRateRangeFilter().subscribe({
       next: (range) => {
         if(range) {
-          this.RateRangeProductsSubscription = this.store.select(ProductSelector.selectAllProducts).subscribe({
-            next: (product: Product[]) => {
-              if(product){
-                this.products = product;
-                if(range.max === 50001){
-                  this.products = product.filter(item => item?.price >= range.min);
-                }else {
-                  this.products = product.filter(item => item?.price >= range.min && item.price < range.max );
-                }
-              }
-            },
-            error: (error: string) => { this.errorMessage = error; },
-            complete: () => { console.log('complete filterProducts Observable')}
-          });  
+          this.store.dispatch(loadProductByRateRange({ range: range }));
+          this.loadAllProducts();
         }
       }
     });
@@ -139,13 +113,11 @@ export class ProductComponent implements OnInit, OnDestroy{
   getBrandsProducts() {
     this.filterService.getselectedBrandFilter().subscribe({
       next: (brand_id: number)=> {
-        this.store.select(ProductSelector.selectAllProducts).subscribe({
-          next: (product: Product[]) => {
-            this.products = product.filter(product => product.brand_id === brand_id ); 
-          },
-          error: (error: string) => { this.errorMessage = error; },
-          complete: () => { console.log('complete filterProducts Observable')}
-        });   
+        if(brand_id) {
+          let params = {'brand_id' : brand_id.toString()}
+          this.store.dispatch(loadProductsByGivenId({ 'id': params }));
+          this.loadAllProducts();
+        } 
       }
     });
   }
@@ -169,23 +141,5 @@ export class ProductComponent implements OnInit, OnDestroy{
  
   onClickCart(id:number){
     this.cartService.addToCart(id);
-  }
-
-  ngOnDestroy(): void {
-    if(this.productSubscription) {
-      this.productSubscription.unsubscribe();
-    }
-    if(this.categroywiseProductsSubscription) {
-      this.categroywiseProductsSubscription.unsubscribe();
-    }
-    if(this.filterProductsSubscription) {
-      this.filterProductsSubscription.unsubscribe();
-    }
-    if(this.ratingsProductsSubscription) {
-      this.ratingsProductsSubscription.unsubscribe();
-    }
-    if(this.RateRangeProductsSubscription) {
-      this.RateRangeProductsSubscription.unsubscribe();
-    }
   }
 }

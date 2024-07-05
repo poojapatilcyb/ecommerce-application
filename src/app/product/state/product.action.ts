@@ -13,7 +13,22 @@ export const loadProductFail = createAction(
     props<{errorMessage: string}>()
 );
 
-export const loadProductByCategoryId = createAction(
+export const loadProductsByGivenId = createAction(
     '[Product Component] loadProductByBrandId',
-    props<{categoryId: {[key: string]: string}}>()
+    props<{id: {[key: string]: string}}>()
+);
+
+export const loadProductByNameFilter = createAction(
+    '[Product Component] loadProductByNameFilter',
+    props<{name: string}>()
+);
+
+export const loadProductByRatings = createAction(
+    '[Product Component] loadProductByNameFilter',
+    props<{rating: number}>()
+);
+
+export const loadProductByRateRange = createAction(
+    '[Product Component] loadProductByNameFilter',
+    props<{range: {min: number, max:number}}>()
 );

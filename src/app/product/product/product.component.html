@@ -1,9 +1,8 @@
 <div class="side-nav">
     <app-filter></app-filter>
 </div>
-<div *ngIf="products.length !== 0; else errorTemplate">
-    <div style ="display:flex; flex-wrap:wrap; justify-content: space-around; margin-bottom: 10px;" >
-        <div *ngFor="let product of products" style="flex: 0 0 25%;">
+    <div style ="display:flex; flex-wrap:wrap; justify-content: space-around; margin-bottom: 10px;" *ngIf="(products$ | async) && ((products$|async)!.length > 0) else errorTemplate">
+        <div *ngFor="let product of products$ | async" style="flex: 0 0 25%;">
             <app-card
             [showWishlistButtonFlag] = true
             [showAddToCartButtonflag] = true
@@ -14,9 +13,8 @@
             ></app-card>
         </div>
     </div>
-</div>
-<ng-template #errorTemplate>
-    <app-not-found
-    [msg]= errorMessage>
-    </app-not-found>
-</ng-template>
+    <ng-template #errorTemplate>
+        <app-not-found
+        [msg]= errorMessage>
+        </app-not-found>
+    </ng-template>

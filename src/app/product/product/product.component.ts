@@ -62,9 +62,7 @@ export class ProductComponent implements OnInit, OnDestroy{
       next: (filterValue)=> {
       if(filterValue) {
         this.filterProducts(filterValue);
-      }},
-      error: (error: string) => { this.errorMessage = error; },
-      complete: () => { console.log('complete getProducts Observable')}
+      }}
     });
 
     // get productlist according to ratings
@@ -72,9 +70,7 @@ export class ProductComponent implements OnInit, OnDestroy{
       next: (rating: number)=> {
       if(rating > 0) {
         this.getRatingsProducts(rating);
-      }},
-      error: (error: string) => { this.errorMessage = error; },
-      complete: () => { console.log('complete getProducts Observable')}
+      }}
   });
 
     this.filterService.getRateRangeFilter().subscribe({
@@ -82,17 +78,13 @@ export class ProductComponent implements OnInit, OnDestroy{
         if(range) {
           this.getRateRangeProducts(range);
         }
-      },
-      error: (error: string) => { this.errorMessage = error; },
-      complete: () => { console.log('complete getProducts Observable')}
+      }
     });
 
     // get productlist according to brands
     this.filterService.getselectedBrandFilter().subscribe({
       next: (brandId: number)=> {
-        this.getBrandsProducts(brandId);},
-      error: (error: string) => { this.errorMessage = error; },
-      complete: () => { console.log('complete getProducts Observable')}
+        this.getBrandsProducts(brandId);}
       });
   }
  

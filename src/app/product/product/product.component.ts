@@ -1,6 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Product } from '../../../Model/product.model';
-import { ProductService } from '../../service/product/product.service';
 import { ActivatedRoute } from '@angular/router';
 import { FilterService } from '../../service/filter/filter.service';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
@@ -29,7 +28,6 @@ export class ProductComponent implements OnInit, OnDestroy{
   private ratingsProductsSubscription: Subscription | undefined;
   private RateRangeProductsSubscription: Subscription | undefined;
   constructor(
-    private productService: ProductService,
     private route: ActivatedRoute,
     private filterService: FilterService,
     private cartService: CartService,
@@ -87,7 +85,7 @@ export class ProductComponent implements OnInit, OnDestroy{
     ).subscribe({
       next: (filterValue)=> {
       if(filterValue) {
-        this.productService.getProducts().subscribe({
+        this.store.select(ProductSelector.selectAllProducts).subscribe({
           next: (product: Product[]) => {
             this.products = product.filter(product =>
             product.name.toLowerCase().includes(filterValue.toLowerCase())
@@ -104,7 +102,7 @@ export class ProductComponent implements OnInit, OnDestroy{
     this.filterService.getRatingsValue().subscribe({
       next: (rating: number)=> {
       if(rating > 0) {
-        this.ratingsProductsSubscription = this.productService.getProducts().subscribe({
+        this.ratingsProductsSubscription = this.store.select(ProductSelector.selectAllProducts).subscribe({
           next: (product: Product[]) => {
             this.products = product.filter(item => item?.rating >= rating);
           },
@@ -119,7 +117,7 @@ export class ProductComponent implements OnInit, OnDestroy{
     this.filterService.getRateRangeFilter().subscribe({
       next: (range) => {
         if(range) {
-          this.RateRangeProductsSubscription = this.productService.getProducts().subscribe({
+          this.RateRangeProductsSubscription = this.store.select(ProductSelector.selectAllProducts).subscribe({
             next: (product: Product[]) => {
               if(product){
                 this.products = product;
@@ -141,7 +139,7 @@ export class ProductComponent implements OnInit, OnDestroy{
   getBrandsProducts() {
     this.filterService.getselectedBrandFilter().subscribe({
       next: (brand_id: number)=> {
-        this.productService.getProducts().subscribe({
+        this.store.select(ProductSelector.selectAllProducts).subscribe({
           next: (product: Product[]) => {
             this.products = product.filter(product => product.brand_id === brand_id ); 
           },

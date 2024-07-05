@@ -1,35 +1,23 @@
 import { createReducer, on } from "@ngrx/store";
-import { productInitialState } from "./product.state";
-import * as ProductAction from "./product.action";
+import * as ProductActions from './product.action';
+import { ProductState } from "./product.state";
 
-export const _productReducer = createReducer(
-    productInitialState,
-    on(ProductAction.loadProduct, (state) => {
-        console.log(state.product);
+export const initialProductState: ProductState = {
+    product: [],
+    error: null
+}
+
+export const productReducer = createReducer(
+    initialProductState,
+    on(ProductActions.loadProductSuccess, (state, {product})=> {
         return {
-            ...state,
-            product: state.product,
-            loading: true,
-            error: null
-        }
-    }),
-    on(ProductAction.loadProductsSuccess, (state, { product }) => {
-        console.log(state.product);
-        return ({
         ...state,
         product: product,
-        loading: false
-      })}),
-      on(ProductAction.loadProductsFailure, (state, { error }) => {
-        console.log(state);
-        return({
+        error: null
+    }
+    }),
+    on(ProductActions.loadProductFail, (state, {errorMessage})=> ({
         ...state,
-        loading: false,
-        error: error
-      })})
-
+        error: errorMessage
+    }))
 )
-
-export function productReducer(state: any, action: any) {
-    return _productReducer(state, action);
-}

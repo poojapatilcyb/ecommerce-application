@@ -1,20 +1,13 @@
-// product.selectors.ts
-import { createSelector, createFeatureSelector } from '@ngrx/store';
-import { ProductState } from './product.state';
+import { createFeatureSelector, createSelector } from "@ngrx/store";
+import { ProductState } from "./product.state";
 
-export const selectProductState = createFeatureSelector<ProductState>('product');
-
-export const selectProducts = createSelector(
-  selectProductState,
-  (state: ProductState) => state.product
+export const selectProductFeature = createFeatureSelector<ProductState>('product');
+export const selectAllProducts = createSelector(
+    selectProductFeature,
+    (state: ProductState) => {console.log(state.product); return state.product}
 );
 
-export const selectProductsLoading = createSelector(
-  selectProductState,
-  (state: ProductState) => state.loading
-);
-
-export const selectProductsError = createSelector(
-  selectProductState,
-  (state: ProductState) => state.error
-);
+export const selectProductError = createSelector(
+    selectProductFeature,
+    (state: ProductState) => state.error
+)

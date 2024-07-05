@@ -1,26 +1,24 @@
-// product.effects.ts
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from "@angular/core";
+import { ProductService } from "../../service/product/product.service";
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { of } from 'rxjs';
-import { catchError, map, switchMap } from 'rxjs/operators';
 import * as ProductActions from './product.action';
-import { ProductService } from '../../service/product/product.service'; // Assuming you have a ProductService
-
+import { catchError, map, of, switchMap } from "rxjs";
 @Injectable()
 export class ProductEffect {
 
-  loadProducts$ = createEffect(() => this.actions$.pipe(
-    ofType(ProductActions.loadProduct),
-    switchMap(() =>
-      this.productService.getProducts().pipe(
-        map(products => { console.log(products); return ProductActions.loadProductsSuccess({ product: products })}),
-        catchError(error => of(ProductActions.loadProductsFailure({ error })))
-      )
+    private api = inject(ProductService);
+    action$ = inject(Actions);
+    loadProducts$ = createEffect(() => 
+        this.action$.pipe(
+            ofType(ProductActions.loadProduct),
+            switchMap(()=>
+                this.api.getProducts().pipe(
+                    map((res)=> ProductActions.loadProductSuccess({product: res})),
+                    catchError((error: {message: string}) => of(
+                        ProductActions.loadProductFail({errorMessage: 'fail to load product'}))
+                    ) 
+                )
+            )
+        )
     )
-  ));
-
-  constructor(
-    private actions$: Actions,
-    private productService: ProductService
-  ) {}
 }

@@ -1,14 +1,15 @@
-import { AfterContentChecked, Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Product } from '../../../Model/product.model';
 import { ProductService } from '../../service/product/product.service';
 import { ActivatedRoute } from '@angular/router';
-import { LocalstorageService } from '../../service/localstorage/localstorage.service';
-import { FilterService, MinMaxRange } from '../../service/filter/filter.service';
+import { FilterService } from '../../service/filter/filter.service';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import { CartService } from '../../service/cart/cart.service';
 import { WishlistService } from '../../service/wishlist/wishlist.service';
 import { Store } from '@ngrx/store';
+import * as ProductSelector from '../state/product.selector';
+import { loadProduct } from '../state/product.action';
 import { appState } from '../../store/app.state';
 
 @Component({
@@ -63,11 +64,9 @@ export class ProductComponent implements OnInit, OnDestroy{
   }
  
   getProducts(){
-    //  implementation by using service
-      this.productSubscription = this.productService.getProducts().subscribe({
-        next: (data: Product[]) => { this.products = data; return this.products;},
-        error: (error: string) => { this.errorMessage = error; },
-        complete: () => { console.log('complete getProducts Observable')}
+    this.store.dispatch(loadProduct());
+    this.store.select(ProductSelector.selectAllProducts).subscribe((data)=> {
+        this.products = data;
     });
   }
  

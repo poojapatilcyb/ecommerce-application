@@ -9,7 +9,7 @@ import { CartService } from '../../service/cart/cart.service';
 import { WishlistService } from '../../service/wishlist/wishlist.service';
 import { Store } from '@ngrx/store';
 import * as ProductSelector from '../state/product.selector';
-import { loadProduct } from '../state/product.action';
+import { loadProduct, loadProductByCategoryId } from '../state/product.action';
 import { appState } from '../../store/app.state';
 
 @Component({
@@ -57,7 +57,7 @@ export class ProductComponent implements OnInit, OnDestroy{
     this.getRatingsProducts();
 
     // get productlist according to rate range
-    this.getRateRangeProducts()
+    this.getRateRangeProducts();
 
     // get productlist according to brands
     this.getBrandsProducts();
@@ -71,12 +71,13 @@ export class ProductComponent implements OnInit, OnDestroy{
   }
  
   getCategroywiseProducts(){
-    let params = {'categoryId' : this.categoryId}
-    this.categroywiseProductsSubscription = this.productService.getProducts(params).subscribe({
-      next: (data: Product[]) => { this.products = data; },
-      error: (error) => { this.errorMessage = error; },
-      complete: () => { console.log('complete getCategroywiseProducts Observable')}
-  });  
+    if(this.categoryId) {
+      let params = {'categoryId' : this.categoryId}
+      this.store.dispatch(loadProductByCategoryId({ 'categoryId': params }));
+      this.store.select(ProductSelector.selectAllProducts).subscribe((data)=> {
+        this.products = data;
+      });
+    } 
   }
 
   filterProducts() {

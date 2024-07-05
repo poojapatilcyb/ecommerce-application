@@ -12,3 +12,8 @@ export const loadProductFail = createAction(
     '[Product Component] loadProductFail',
     props<{errorMessage: string}>()
 );
+
+export const loadProductByCategoryId = createAction(
+    '[Product Component] loadProductByBrandId',
+    props<{categoryId: {[key: string]: string}}>()
+);

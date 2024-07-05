@@ -10,7 +10,6 @@ import { CartService } from '../../service/cart/cart.service';
 import { WishlistService } from '../../service/wishlist/wishlist.service';
 import { Store } from '@ngrx/store';
 import { appState } from '../../store/app.state';
-import { getProductData } from '../state/product.selector';
 
 @Component({
   selector: 'app-product',
@@ -47,64 +46,29 @@ export class ProductComponent implements OnInit, OnDestroy{
         } else {
           this.getProducts();
         }
-       },
-      error: (error: string) => { this.errorMessage = error; },
-      complete: () => { console.log('complete getProducts Observable')}
+       }
     });
 
     // filter the product list based on filter string
-    this.filterService.filter$.pipe(
-      debounceTime(500),
-      distinctUntilChanged(),
-    ).subscribe({
-      next: (filterValue)=> {
-      if(filterValue) {
-        this.filterProducts(filterValue);
-      }},
-      error: (error: string) => { this.errorMessage = error; },
-      complete: () => { console.log('complete getProducts Observable')}
-    });
+    this.filterProducts();
 
     // get productlist according to ratings
-    this.filterService.getRatingsValue().subscribe({
-      next: (rating: number)=> {
-      if(rating > 0) {
-        this.getRatingsProducts(rating);
-      }},
-      error: (error: string) => { this.errorMessage = error; },
-      complete: () => { console.log('complete getProducts Observable')}
-  });
+    this.getRatingsProducts();
 
-    this.filterService.getRateRangeFilter().subscribe({
-      next: (range) => {
-        if(range) {
-          this.getRateRangeProducts(range);
-        }
-      },
-      error: (error: string) => { this.errorMessage = error; },
-      complete: () => { console.log('complete getProducts Observable')}
-    });
+    // get productlist according to rate range
+    this.getRateRangeProducts()
 
     // get productlist according to brands
-    this.filterService.getselectedBrandFilter().subscribe({
-      next: (brandId: number)=> {
-        this.getBrandsProducts(brandId);},
-      error: (error: string) => { this.errorMessage = error; },
-      complete: () => { console.log('complete getProducts Observable')}
-      });
+    this.getBrandsProducts();
   }
  
   getProducts(){
-    // Implementated get productdata by using store
-    this.store.select(getProductData).subscribe((data)=>{
-      this.products = data;
-    });
     //  implementation by using service
-    /*   this.productSubscription = this.productService.getProducts().subscribe({
+      this.productSubscription = this.productService.getProducts().subscribe({
         next: (data: Product[]) => { this.products = data; return this.products;},
         error: (error: string) => { this.errorMessage = error; },
         complete: () => { console.log('complete getProducts Observable')}
-    }); */  
+    });
   }
  
   getCategroywiseProducts(){
@@ -116,54 +80,78 @@ export class ProductComponent implements OnInit, OnDestroy{
   });  
   }
 
-  filterProducts(filterValue: string) {
-    this.productService.getProducts().subscribe({
-      next: (product: Product[]) => {
-        this.products = product.filter(product =>
-        product.name.toLowerCase().includes(filterValue.toLowerCase())
-        ); 
-      },
-      error: (error: string) => { this.errorMessage = error; },
-      complete: () => { console.log('complete filterProducts Observable')}
-    });  
+  filterProducts() {
+    this.filterService.filter$.pipe(
+      debounceTime(500),
+      distinctUntilChanged(),
+    ).subscribe({
+      next: (filterValue)=> {
+      if(filterValue) {
+        this.productService.getProducts().subscribe({
+          next: (product: Product[]) => {
+            this.products = product.filter(product =>
+            product.name.toLowerCase().includes(filterValue.toLowerCase())
+            ); 
+          },
+          error: (error: string) => { this.errorMessage = error; },
+          complete: () => { console.log('complete filterProducts Observable')}
+        }); 
+      }}
+    }); 
   }
 
-  getRatingsProducts(rating: number){
-    this.ratingsProductsSubscription = this.productService.getProducts().subscribe({
-      next: (product: Product[]) => {
-        this.products = product.filter(item => item?.rating >= rating);
-      },
-      error: (error: string) => { this.errorMessage = error; },
-      complete: () => { console.log('complete filterProducts Observable')}
-    });  
+  getRatingsProducts(){
+    this.filterService.getRatingsValue().subscribe({
+      next: (rating: number)=> {
+      if(rating > 0) {
+        this.ratingsProductsSubscription = this.productService.getProducts().subscribe({
+          next: (product: Product[]) => {
+            this.products = product.filter(item => item?.rating >= rating);
+          },
+          error: (error: string) => { this.errorMessage = error; },
+          complete: () => { console.log('complete filterProducts Observable')}
+        });  
+      }}
+    });
   }
 
-  getRateRangeProducts(range: MinMaxRange) {
-    this.RateRangeProductsSubscription = this.productService.getProducts().subscribe({
-      next: (product: Product[]) => {
-        if(product){
-          this.products = product;
-          if(range.max === 50001){
-            this.products = product.filter(item => item?.price >= range.min);
-          }else {
-            this.products = product.filter(item => item?.price >= range.min && item.price < range.max );
-          }
+  getRateRangeProducts() {
+    this.filterService.getRateRangeFilter().subscribe({
+      next: (range) => {
+        if(range) {
+          this.RateRangeProductsSubscription = this.productService.getProducts().subscribe({
+            next: (product: Product[]) => {
+              if(product){
+                this.products = product;
+                if(range.max === 50001){
+                  this.products = product.filter(item => item?.price >= range.min);
+                }else {
+                  this.products = product.filter(item => item?.price >= range.min && item.price < range.max );
+                }
+              }
+            },
+            error: (error: string) => { this.errorMessage = error; },
+            complete: () => { console.log('complete filterProducts Observable')}
+          });  
         }
-      },
-      error: (error: string) => { this.errorMessage = error; },
-      complete: () => { console.log('complete filterProducts Observable')}
-    });  
+      }
+    });
   }
 
-  getBrandsProducts(brand_id: number) {
-    this.productService.getProducts().subscribe({
-      next: (product: Product[]) => {
-        this.products = product.filter(product => product.brand_id === brand_id ); 
-      },
-      error: (error: string) => { this.errorMessage = error; },
-      complete: () => { console.log('complete filterProducts Observable')}
-    });  
+  getBrandsProducts() {
+    this.filterService.getselectedBrandFilter().subscribe({
+      next: (brand_id: number)=> {
+        this.productService.getProducts().subscribe({
+          next: (product: Product[]) => {
+            this.products = product.filter(product => product.brand_id === brand_id ); 
+          },
+          error: (error: string) => { this.errorMessage = error; },
+          complete: () => { console.log('complete filterProducts Observable')}
+        });   
+      }
+    });
   }
+
   getDescriptionStyle(): { [key: string]: string } {
     // Example: Conditionally apply styles based on description length
     const maxLines = 3;
@@ -178,17 +166,6 @@ export class ProductComponent implements OnInit, OnDestroy{
   }
 
   onClickWishlist(id:number){
-    // const existingIds = this.localStorageService.getItem('wishlistItemIds');
-    // let idsArray: number[] = [];
-    // if(existingIds !== null){
-    //   idsArray = JSON.parse(existingIds);
-    //   idsArray.includes(id) ? '' : idsArray.push(id);
-    //   this.localStorageService.setItem('wishlistItemIds', JSON.stringify(idsArray));
-    // }else {
-    //   idsArray.push(id);
-    //   this.localStorageService.setItem('wishlistItemIds', JSON.stringify(idsArray));
-    // }
-    // this.localStorageService.setItem('wishlistItemCount', JSON.stringify(idsArray.length));
     this.wishlistService.addToWishlist(id);
   }
  

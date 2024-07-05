@@ -1,5 +1,5 @@
 import { Injectable, inject } from "@angular/core";
-import { ProductService } from "../service/product/product.service";
+import { ProductService } from "../../service/product/product.service";
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import * as ProductActions from './product.action';
 import { catchError, map, of, switchMap } from "rxjs";

@@ -1,5 +1,5 @@
 import { createReducer, on } from "@ngrx/store";
-import { Product } from "../../Model/product.model";
+import { Product } from "../../../Model/product.model";
 import * as ProductActions from './product.action';
 import { ProductState } from "./product.state";
 

@@ -12,9 +12,9 @@ import { ErrorHandlerInterceptor } from './service/interceptors/error-handler.se
 import { StoreModule } from '@ngrx/store';
 import { CardModule } from './card/card.module';
 import { EffectsModule } from '@ngrx/effects';
-import { ProductEffect } from './state/product.effect';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { AppReducer } from './app.state';
+import { ProductEffect } from './product/state/product.effect';
 @NgModule({
   declarations: [
     AppComponent,

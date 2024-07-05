@@ -14,7 +14,7 @@ export class ProductEffect {
             ofType(ProductActions.loadProduct),
             switchMap(()=>
                 this.api.getProducts().pipe(
-                    map((res)=> ProductActions.loadProductSuccess({products: res})),
+                    map((res)=> ProductActions.loadProductSuccess({product: res})),
                     catchError((error: {message: string}) => of(
                         ProductActions.loadProductFail({errorMessage: 'fail to load product'}))
                     ) 

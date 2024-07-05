@@ -9,9 +9,9 @@ import { Observable, Subscription, of } from 'rxjs';
 import { CartService } from '../../service/cart/cart.service';
 import { WishlistService } from '../../service/wishlist/wishlist.service';
 import { Store } from '@ngrx/store';
-import * as ProductActions from '../../state/product.action';
-import * as ProductSelector from '../../state/product.selector';
+import * as ProductSelector from '../state/product.selector';
 import { AppState } from '../../app.state';
+import { loadProduct } from '../state/product.action';
 
 @Component({
   selector: 'app-product',
@@ -96,18 +96,18 @@ export class ProductComponent implements OnInit, OnDestroy{
       });
   }
  
-  getProducts(){
-  //   this.productSubscription = this.productService.getProducts().subscribe({
-  //     next: (data: Product[]) => { 
-  //       this.products = data; return this.products;
-  //     },
-  //     error: (error: string) => { this.errorMessage = error; },
-  //     complete: () => { console.log('complete getProducts Observable')}
-  // });  
-        this.store.dispatch(ProductActions.loadProduct());
-        console.log(this.store.select(ProductSelector.selectAllProducts));
-        this.store.select(ProductSelector.selectAllProducts).subscribe((data)=>console.log(data));
-        this.productStore$ = this.store.select(ProductSelector.selectAllProducts);
+  getProducts() {
+      //   this.productSubscription = this.productService.getProducts().subscribe({
+      //     next: (data: Product[]) => { 
+      //       this.products = data; return this.products;
+      //     },
+      //     error: (error: string) => { this.errorMessage = error; },
+      //     complete: () => { console.log('complete getProducts Observable')}
+      // });
+    this.store.dispatch(loadProduct());
+    this.store.select(ProductSelector.selectAllProducts).subscribe((data)=> {
+        this.products = data;
+    });
   }
  
   getCategroywiseProducts(){

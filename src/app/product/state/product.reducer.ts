@@ -10,11 +10,10 @@ export const initialProductState: ProductState = {
 
 export const productReducer = createReducer(
     initialProductState,
-    on(ProductActions.loadProductSuccess, (state, {products})=> {
-        console.log(products);
+    on(ProductActions.loadProductSuccess, (state, {product})=> {
         return {
         ...state,
-        products: products,
+        product: product,
         error: null
     }
     }),

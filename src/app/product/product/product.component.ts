@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Product } from '../../../Model/product.model';
 import { ActivatedRoute } from '@angular/router';
-import { FilterService } from '../../service/filter/filter.service';
+import { FilterService, MinMaxRange } from '../../service/filter/filter.service';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { Observable, Subscription, of } from 'rxjs';
 import { CartService } from '../../service/cart/cart.service';
@@ -10,7 +10,6 @@ import { Store } from '@ngrx/store';
 import * as ProductSelector from '../state/product.selector';
 import { loadProduct, loadProductsByGivenId, loadProductByNameFilter, loadProductByRatings, loadProductByRateRange} from '../state/product.action';
 import { appState } from '../../store/app.state';
-
 @Component({
   selector: 'app-product',
   templateUrl: './product.component.html',
@@ -46,15 +45,25 @@ constructor(
 
     // filter the product list based on filter string
     this.filterProducts();
+    this.filterService.filter1$.subscribe((filter) => {
+      switch(filter.filterType) {
+        case 'rating_filter':
+        if(typeof filter.filterValue === 'number'){
+          this.getRatingsProducts(filter.filterValue);
+        }
+        break;
 
-    // get productlist according to ratings
-    this.getRatingsProducts();
+        case 'rate_range_filter':
+            this.getRateRangeProducts(filter.filterValue as MinMaxRange);
+        break;
 
-    // get productlist according to rate range
-    this.getRateRangeProducts();
-
-    // get productlist according to brands
-    this.getBrandsProducts();
+        case 'brand_filter':
+          if(typeof filter.filterValue === 'number'){
+            this.getBrandsProducts(filter.filterValue);
+          }
+        break;
+      }
+    })
   }
  
   getProducts(){
@@ -89,37 +98,26 @@ constructor(
     }); 
   }
 
-  getRatingsProducts(){
-    this.filterService.getRatingsValue().subscribe({
-      next: (rating: number)=> {
-      if(rating > 0) {
-        this.store.dispatch(loadProductByRatings({ rating: rating }));
-        this.loadAllProducts();
-      }}
-    });
+  getRatingsProducts(rating: number){
+    if(rating > 0) {
+      this.store.dispatch(loadProductByRatings({ rating: rating }));
+      this.loadAllProducts();
+    }
   }
 
-  getRateRangeProducts() {
-    this.filterService.getRateRangeFilter().subscribe({
-      next: (range) => {
-        if(range) {
-          this.store.dispatch(loadProductByRateRange({ range: range }));
-          this.loadAllProducts();
-        }
-      }
-    });
+  getRateRangeProducts(range: {min: number, max: number}) {
+    if(range) {
+      this.store.dispatch(loadProductByRateRange({ range: range }));
+      this.loadAllProducts();
+    }
   }
 
-  getBrandsProducts() {
-    this.filterService.getselectedBrandFilter().subscribe({
-      next: (brand_id: number)=> {
-        if(brand_id) {
-          let params = {'brand_id' : brand_id.toString()}
-          this.store.dispatch(loadProductsByGivenId({ 'id': params }));
-          this.loadAllProducts();
-        } 
-      }
-    });
+  getBrandsProducts(brand_id: number) {
+    if(brand_id) {
+      let params = {'brand_id' : brand_id.toString()}
+      this.store.dispatch(loadProductsByGivenId({ 'id': params }));
+      this.loadAllProducts();
+    } 
   }
 
   getDescriptionStyle(): { [key: string]: string } {

@@ -6,40 +6,47 @@ import { Observable, Subject } from 'rxjs';
 })
 
 export class FilterService {
-  private filterSubject = new Subject<string>();
-  filter$ = this.filterSubject.asObservable();
+  private filterSubject1 = new Subject<filter>;
+  filter1$ = this.filterSubject1.asObservable();
 
-  private ratingSubject = new Subject<number>();
-  private minMaxSubject = new Subject<MinMaxRange>();
-  private brandFilterSubject = new Subject<number>(); // BehaviorSubject to emit changes
 
-  constructor(){
-  }
+  private NameFilterSubject = new Subject<string>();
+  filter$ = this.NameFilterSubject.asObservable();
 
-  updateFilter(filterValue: string) {
-    this.filterSubject.next(filterValue);
+  constructor(){}
+
+  updateNameFilter(filterValue: string) {
+    this.NameFilterSubject.next(filterValue);
   }
   updateRatingsValue(rating: number) {
-    this.ratingSubject.next(rating);
+    this.filterSubject1.next({
+      filterType: 'rating_filter',
+      filterValue: rating
+    });
   }
-  getRatingsValue() {
-    return this.ratingSubject.asObservable();
-  }
+
   applyRateRangeFilter(min: number, max: number) {
-    this.minMaxSubject.next({min, max});
+    this.filterSubject1.next({
+      filterType: 'rate_range_filter',
+      filterValue: {min, max}
+    });
   }
-  getRateRangeFilter() {
-    return this.minMaxSubject.asObservable();
-  }
-  getselectedBrandFilter(): Observable<number> {
-    return this.brandFilterSubject.asObservable();
-  }
+
+
   addSelectedBrandFilter(id: number): void {
-    this.brandFilterSubject.next(id);
+    this.filterSubject1.next({
+      filterType: 'brand_filter',
+      filterValue: id
+    });
   }
 }
 
 export interface MinMaxRange {
   min: number;
   max: number;
+}
+
+export interface filter {
+  filterType: string;
+  filterValue: string | number | MinMaxRange;
 }

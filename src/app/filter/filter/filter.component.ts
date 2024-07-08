@@ -44,7 +44,7 @@ export class FilterComponent implements OnInit, OnDestroy{
   }
 
   filterBrands() {
-    this.filterService.updateFilter(this.searchTerm);
+    this.filterService.updateNameFilter(this.searchTerm);
   }
 
   rangeSelectionApply(){

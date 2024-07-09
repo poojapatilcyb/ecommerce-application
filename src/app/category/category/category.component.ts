@@ -5,6 +5,7 @@ import { Category } from '../../../Model/category.model';
 import { Subscription } from 'rxjs';
 import { CartService } from '../../service/cart/cart.service';
 import { WishlistService } from '../../service/wishlist/wishlist.service';
+import { FilterService } from '../../service/filter/filter.service';
 
 @Component({
   selector: 'app-category',
@@ -20,7 +21,8 @@ export class CategoryComponent implements OnInit, AfterContentChecked, OnDestroy
   constructor(
     private service: CategoryService,
     private cartService: CartService,
-    private wishlistService: WishlistService
+    private wishlistService: WishlistService,
+    private filterService: FilterService
   ) {}
  
   ngOnInit(): void {
@@ -50,6 +52,11 @@ export class CategoryComponent implements OnInit, AfterContentChecked, OnDestroy
     this.wishlistService.wishlistItems$.subscribe((wishlistItems)=> { 
       this.wishlistItemCount = wishlistItems.length
     })
+  }
+
+  allClick() {
+    console.log('product')
+    this.filterService.loadInitialProducts();
   }
 
   ngOnDestroy(): void {

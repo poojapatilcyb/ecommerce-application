@@ -1,42 +1,92 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { Brand } from '../../../Model/brand.model';
+import { Product } from '../../../Model/product.model';
+import { ProductService } from '../product/product.service';
 
 @Injectable({
   providedIn: 'root'
 })
 
 export class FilterService {
-  private filterSubject = new Subject<string>();
-  filter$ = this.filterSubject.asObservable();
 
-  private ratingSubject = new Subject<number>();
-  private minMaxSubject = new Subject<MinMaxRange>();
-  private brandFilterSubject = new Subject<number>(); // BehaviorSubject to emit changes
+  productSubject = new BehaviorSubject<Product[]>([]);
+  productObservable = this.productSubject.asObservable();
 
-  constructor(){
+  constructor(
+    private productService: ProductService
+  ){
+    this.loadInitialProducts();
+  }
+
+  loadInitialProducts(){
+    this.productService.getProducts().subscribe((product) => {
+      this.updateProduct(product);
+    });
+  }
+
+  updateProduct(product: Product[]) {
+    this.productSubject.next(product);
   }
 
   updateFilter(filterValue: string) {
-    this.filterSubject.next(filterValue);
+    let prod: Product[] = [];
+    this.productObservable.subscribe((product)=> {
+      if(product.length > 0){
+        prod = product.filter(product =>
+          product.name.toLowerCase().includes(filterValue.toLowerCase())
+        );
+      }else {
+        prod =[];
+      }
+      this.updateProduct(prod);
+   
+    });
   }
+
   updateRatingsValue(rating: number) {
-    this.ratingSubject.next(rating);
+    let prod: Product[] = [];
+    this.productObservable.subscribe((product)=> {
+      console.log('product', product,)
+      if(product.length > 0) {
+      prod = product.filter(item => item?.rating >= rating);
+      console.log( '\n prod', prod, '\n rating', rating);
+      }else {
+        prod = [];
+      }
+    });
+    this.updateProduct(prod);
   }
-  getRatingsValue() {
-    return this.ratingSubject.asObservable();
-  }
+
   applyRateRangeFilter(min: number, max: number) {
-    this.minMaxSubject.next({min, max});
+    let prod: Product[] = [];
+    this.productObservable.subscribe((product)=> {
+      console.log('product', product,)
+      if(product.length > 0){
+        prod = product;
+        if(max === 50001){
+          prod = product.filter(item => item?.price >= min);
+        }else {
+          prod = product.filter(item => item?.price >= min && item.price < max );
+        }
+      }else {
+        prod = [];
+      }
+    });
+    this.updateProduct(prod);
   }
-  getRateRangeFilter() {
-    return this.minMaxSubject.asObservable();
-  }
-  getselectedBrandFilter(): Observable<number> {
-    return this.brandFilterSubject.asObservable();
-  }
+
   addSelectedBrandFilter(id: number): void {
-    this.brandFilterSubject.next(id);
+    let prod: Product[] = [];
+    this.productObservable.subscribe((product)=> {
+      console.log('product', product,)
+      if(product.length > 0) {
+      prod = product.filter(item => item?.brand_id === id);
+      }else {
+        prod = [];
+      }
+    });
+    this.updateProduct(prod);
   }
 }
 

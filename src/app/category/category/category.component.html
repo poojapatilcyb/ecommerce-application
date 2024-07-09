@@ -1,6 +1,7 @@
 <ul>
-    <li>
-        <a [routerLink]="['/product']" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">All</a></li>
+    <li (click)="allClick()">
+        <a [routerLink]="['/product']" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" >All</a>
+    </li>
     <li *ngFor="let category of categories">
         <a routerLinkActive="active" [routerLink]="['/product',category?.id]">{{category?.name}}</a>
     </li>

@@ -49,13 +49,7 @@
         {
             "id": 7,
             "name": "vivo"
-        },
-        {
-            "id": 8,
-            "name": "SAMSUNG"
-        }
-        
-        
+        }    
     ],
     "products": [
         {
@@ -136,7 +130,7 @@
             "categoryId": 1,
             "img": "https://media-ik.croma.com/prod/https://media.croma.com/image/upload/v1705640892/Croma%20Assets/Communication/Mobiles/Images/303817_cc5lmd.png?tr=w-640",
             "description": "Behold the Samsung Galaxy S24 Ultra smartphone, an exceptional amalgamation of incredible technology and superior sophistication. Whether you're typing up a storm or jotting something down, Note Assist makes a long story short. Behold the Samsung Galaxy S24 Ultra smartphone, an exceptional amalgamation of incredible technology and superior sophistication. Whether you're typing up a storm or jotting something down, Note Assist makes a long story short.",
-            "brand_id": 8
+            "brand_id": 3
         },
         {
             "id": 9,
@@ -146,7 +140,7 @@
             "categoryId": 1,
             "img": "https://media-ik.croma.com/prod/https://media.croma.com/image/upload/v1705640892/Croma%20Assets/Communication/Mobiles/Images/303817_cc5lmd.png?tr=w-640",
             "description": "Behold the Samsung Galaxy S24 Ultra smartphone, an exceptional amalgamation of incredible technology and superior sophistication. Whether you're typing up a storm or jotting something down, Note Assist makes a long story short. Behold the Samsung Galaxy S24 Ultra smartphone, an exceptional amalgamation of incredible technology and superior sophistication. Whether you're typing up a storm or jotting something down, Note Assist makes a long story short.",
-            "brand_id": 9
+            "brand_id": 3
         }
     ]
 }

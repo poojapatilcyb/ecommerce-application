@@ -1,14 +1,14 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Product } from '../../../Model/product.model';
 import { ActivatedRoute } from '@angular/router';
 import { FilterService, MinMaxRange } from '../../service/filter/filter.service';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
-import { Observable, Subscription, of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { CartService } from '../../service/cart/cart.service';
 import { WishlistService } from '../../service/wishlist/wishlist.service';
 import { Store } from '@ngrx/store';
 import * as ProductSelector from '../state/product.selector';
-import { loadProduct, loadProductsByGivenId, loadProductByNameFilter, loadProductByRatings, loadProductByRateRange} from '../state/product.action';
+import { loadProduct} from '../state/product.action';
 import { appState } from '../../store/app.state';
 @Component({
   selector: 'app-product',
@@ -17,11 +17,12 @@ import { appState } from '../../store/app.state';
 })
 export class ProductComponent implements OnInit{
   cartItemCount: number = 0;
-  products$: Observable<Product[]> = of([]);
+  orignalProducts: Product[] = [];
+  products: Product[] = [];
   errorMessage$: Observable<string | null> = of('');
   categoryId: string | null = null;
   rating: number = 0;
-  errorMessage: string = '';
+  errorMessage: string = 'Product not available';
 constructor(
     private route: ActivatedRoute,
     private filterService: FilterService,
@@ -32,13 +33,12 @@ constructor(
  
   ngOnInit(): void {
     // Check if the 'categoryId' parameter is present in the route
+    this.getProducts();
     this.route.paramMap.subscribe({
       next: (params) => { 
         if (params.has('id')) {
           this.categoryId = params.get('id');
           this.getCategroywiseProducts();
-        } else {
-          this.getProducts();
         }
        }
     });
@@ -68,20 +68,19 @@ constructor(
  
   getProducts(){
     this.store.dispatch(loadProduct());
-    this.loadAllProducts();
-  }
-
-  loadAllProducts(){
-    this.products$ =  this.store.select(ProductSelector.selectAllProducts);
+    this.store.select(ProductSelector.selectAllProducts).subscribe((product) => {
+      this.orignalProducts = product;
+      this.products = product;
+    })
+    
     this.errorMessage$ = this.store.select(ProductSelector.selectProductError);
     this.store.select(ProductSelector.selectProductError).subscribe((err)=> this.errorMessage = err? err : 'No Product Found!!!')
   }
  
   getCategroywiseProducts(){
     if(this.categoryId) {
-      let params = {'categoryId' : this.categoryId}
-      this.store.dispatch(loadProductsByGivenId({ id: params }));
-      this.loadAllProducts();
+      let category_Id = this.categoryId ? parseInt(this.categoryId) : '0';
+      this.products = this.orignalProducts.filter((products)=> products.categoryId === category_Id);
     } 
   }
 
@@ -92,31 +91,35 @@ constructor(
     ).subscribe({
       next: (filterValue)=> {
       if(filterValue) {
-        this.store.dispatch(loadProductByNameFilter({ name: filterValue }));
-        this.loadAllProducts();
-      }}
+        this.products = this.orignalProducts.filter(product =>
+          product.name.toLowerCase().includes(filterValue.toLowerCase())
+        )
+      }else {
+        this.products = this.orignalProducts}
+      }
     }); 
   }
 
   getRatingsProducts(rating: number){
     if(rating > 0) {
-      this.store.dispatch(loadProductByRatings({ rating: rating }));
-      this.loadAllProducts();
+      this.products = this.orignalProducts.filter(item => item?.rating >= rating);          
     }
   }
 
   getRateRangeProducts(range: {min: number, max: number}) {
     if(range) {
-      this.store.dispatch(loadProductByRateRange({ range: range }));
-      this.loadAllProducts();
+        this.products = this.orignalProducts;
+        if(range.max === 50001){
+            this.products = this.orignalProducts.filter(item => item?.price >= range.min);
+        }else {
+            this.products = this.orignalProducts.filter(item => item?.price >= range.min && item.price < range.max );
+        }
     }
   }
 
   getBrandsProducts(brand_id: number) {
     if(brand_id) {
-      let params = {'brand_id' : brand_id.toString()}
-      this.store.dispatch(loadProductsByGivenId({ 'id': params }));
-      this.loadAllProducts();
+      this.products = this.orignalProducts.filter((products)=> products.brand_id === brand_id);
     } 
   }
 

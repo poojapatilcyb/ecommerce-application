@@ -4,19 +4,22 @@ import { HttpClientModule, HttpClient } from '@angular/common/http'; // Import H
 import { RouterModule } from '@angular/router';
 
 import { CategoryComponent } from './category.component';
-import { LocalstorageService } from '../../service/localstorage/localstorage.service';
 import { CategoryService } from '../../service/category/category.service';
-import { of, throwError } from 'rxjs';
+import { of } from 'rxjs';
 import { Category } from '../../../Model/category.model';
+import { CartService } from '../../service/cart/cart.service';
+import { WishlistService } from '../../service/wishlist/wishlist.service';
+import { jest } from '@jest/globals';
 
 describe('CategoryComponent', () => {
   let component: CategoryComponent;
   let fixture: ComponentFixture<CategoryComponent>;
   let httpTestingController: HttpTestingController;
-  let categoryServiceSpy: jasmine.SpyObj<CategoryService>;
-  let LocalstorageServiceSpy: LocalstorageService;
+  let categoryServiceSpy: { getCategories: jest.Mock };
   beforeEach(async () => {
-    categoryServiceSpy = jasmine.createSpyObj('CategoryService', ['getCategories']);
+    categoryServiceSpy =  {
+      getCategories: jest.fn(),
+    };
     await TestBed.configureTestingModule({
       declarations: [CategoryComponent],
       imports: [
@@ -26,15 +29,16 @@ describe('CategoryComponent', () => {
       ],
       providers: [
         { provide: CategoryService, useValue: categoryServiceSpy },
-        LocalstorageService]
+
+        CartService,
+        WishlistService
+      ]
     })
     .compileComponents();
     
     fixture = TestBed.createComponent(CategoryComponent);
     component = fixture.componentInstance;
     httpTestingController = TestBed.inject(HttpTestingController);
-    categoryServiceSpy = TestBed.inject(CategoryService) as jasmine.SpyObj<CategoryService>;
-    // fixture.detectChanges();
   });
 
   it('should create', () => {
@@ -52,22 +56,22 @@ describe('CategoryComponent', () => {
           "name": "Microwave"
       }
     ];
-    categoryServiceSpy.getCategories.and.returnValue(of(testData));
+    categoryServiceSpy.getCategories.mockReturnValue(of(testData));
     // Call the method to test
     component.getCategories();
 
     // Expectations for next callback
-    expect(component.categories).toBe(testData);
+    expect(component.categories).toEqual(testData);
     expect(component.errorMessage).toBeFalsy(); // No error should be set
-
+    console.log(component.categories);
     // Complete should have been called
-    fixture.detectChanges(); // Detect changes to call ngOnDestroy
-    expect(component.categories).toBe(testData); // Data should still be set
+    fixture.detectChanges();
+    expect(component.categories).toBe(testData);
   });
 
   it('ngOnDestroy should unsubscribe categoriesSubscription', () => {
-    // Verify ngOnDestroy was called to unsubscribe
-    component.ngOnDestroy(); // Manually call ngOnDestroy
+    component.ngOnDestroy(); 
     if(component.categoriesSubscription) expect(component?.categoriesSubscription.closed).toBe(true); // Subscription should be closed
   });
+  
 });

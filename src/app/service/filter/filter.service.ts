@@ -1,17 +1,18 @@
 import { Injectable } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
+import { Filter, FilterConstants } from '../../constants/filter.constants';
 
 @Injectable({
   providedIn: 'root'
 })
 
 export class FilterService {
-  private filterSubject1 = new Subject<filter>;
-  filter1$ = this.filterSubject1.asObservable();
+  private filterSubject = new Subject<Filter>;
+  filter$ = this.filterSubject.asObservable();
 
 
   private NameFilterSubject = new Subject<string>();
-  filter$ = this.NameFilterSubject.asObservable();
+  nameFilter$ = this.NameFilterSubject.asObservable();
 
   constructor(){}
 
@@ -19,34 +20,25 @@ export class FilterService {
     this.NameFilterSubject.next(filterValue);
   }
   updateRatingsValue(rating: number) {
-    this.filterSubject1.next({
-      filterType: 'rating_filter',
+    this.filterSubject.next({
+      filterType: FilterConstants.RATEING_FILTER,
       filterValue: rating
     });
   }
 
   applyRateRangeFilter(min: number, max: number) {
-    this.filterSubject1.next({
-      filterType: 'rate_range_filter',
+    this.filterSubject.next({
+      filterType: FilterConstants.RATE_RANGE_FILTER,
       filterValue: {min, max}
     });
   }
 
 
   addSelectedBrandFilter(id: number): void {
-    this.filterSubject1.next({
-      filterType: 'brand_filter',
+    this.filterSubject.next({
+      filterType: FilterConstants.BRAND_FILTER,
       filterValue: id
     });
   }
 }
 
-export interface MinMaxRange {
-  min: number;
-  max: number;
-}
-
-export interface filter {
-  filterType: string;
-  filterValue: string | number | MinMaxRange;
-}

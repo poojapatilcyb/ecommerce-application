@@ -22,7 +22,7 @@ describe('CategoryService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should fetch data from API', () => {
+  it('should fetch category data from API', (done) => {
     const mockData = [
       {
         "id": 1,
@@ -35,12 +35,19 @@ describe('CategoryService', () => {
   ];
 
     service.getCategories().subscribe(data => {
+      expect(data).toBeTruthy();
       expect(data).toEqual(mockData);
+      expect(data.length).toBe(2);
+      done();
     });
-
+    // Expect a single request to the apiUrl
     const req = httpTestingController.expectOne('http://localhost:3000/categories');
     expect(req.request.method).toEqual('GET');
 
     req.flush(mockData); // Simulate response
   });
+
+  afterEach(() => {
+    httpTestingController.verify();
+  })
 });

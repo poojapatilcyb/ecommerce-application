@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Product } from '../../../Model/product.model';
 import { ActivatedRoute } from '@angular/router';
-import { FilterService, MinMaxRange } from '../../service/filter/filter.service';
+import { FilterService } from '../../service/filter/filter.service';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
 import { CartService } from '../../service/cart/cart.service';
@@ -10,6 +10,7 @@ import { Store } from '@ngrx/store';
 import * as ProductSelector from '../state/product.selector';
 import { loadProduct} from '../state/product.action';
 import { appState } from '../../store/app.state';
+import { MinMaxRange } from '../../constants/filter.constants';
 @Component({
   selector: 'app-product',
   templateUrl: './product.component.html',
@@ -45,7 +46,7 @@ constructor(
 
     // filter the product list based on filter string
     this.filterProducts();
-    this.filterService.filter1$.subscribe((filter) => {
+    this.filterService.filter$.subscribe((filter) => {
       switch(filter.filterType) {
         case 'rating_filter':
         if(typeof filter.filterValue === 'number'){
@@ -85,7 +86,7 @@ constructor(
   }
 
   filterProducts() {
-    this.filterService.filter$.pipe(
+    this.filterService.nameFilter$.pipe(
       debounceTime(500),
       distinctUntilChanged(),
     ).subscribe({
@@ -106,7 +107,7 @@ constructor(
     }
   }
 
-  getRateRangeProducts(range: {min: number, max: number}) {
+  getRateRangeProducts(range: MinMaxRange) {
     if(range) {
         this.products = this.orignalProducts;
         if(range.max === 50001){

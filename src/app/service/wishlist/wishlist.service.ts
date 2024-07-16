@@ -8,7 +8,7 @@ import { LocalstorageService } from '../localstorage/localstorage.service';
 export class WishlistService {
 
   private wishlistItemsSubject = new BehaviorSubject<number[]>([]);
-  wishlistItems$ = this.wishlistItemsSubject.asObservable();
+
   constructor(
     private localStorageService: LocalstorageService
   ) { 
@@ -36,5 +36,9 @@ export class WishlistService {
       this.localStorageService.setItem('wishlistItemIds', JSON.stringify(idsArray));
       this.wishlistItemsSubject.next(idsArray);
     }
+  }
+
+  getWishlist(){
+    return this.wishlistItemsSubject.asObservable();
   }
 }

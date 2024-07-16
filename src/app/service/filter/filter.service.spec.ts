@@ -32,7 +32,6 @@ describe('FilterService', () => {
       done();
     });
     service.updateRatingsValue(5);
-
   });
 
   it('rate range filterSubject should emit new value', (done) => {
@@ -47,7 +46,6 @@ describe('FilterService', () => {
       done();
     });
     service.applyRateRangeFilter(10000,20000);
-    
   });
 
   it('brand filterSubject should emit new value', (done) => {

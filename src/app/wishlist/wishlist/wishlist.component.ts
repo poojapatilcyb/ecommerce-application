@@ -24,7 +24,7 @@ export class WishlistComponent implements OnInit, OnDestroy{
   }
  
   getWishlistProducts(){
-    this.wishlistService.wishlistItems$.subscribe((idsArray)=> {
+    this.wishlistService.getWishlist().subscribe((idsArray)=> {
       this.productsSubscription = this.service.getProducts().subscribe({
         next: (data: Product[]) => { this.wishlistData = data.filter(item => idsArray?.includes(item.id)); },
         error: (error: string) => { this.errorMessage = error; },

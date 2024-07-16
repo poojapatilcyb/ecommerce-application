@@ -12,7 +12,7 @@ import { WishlistService } from '../../service/wishlist/wishlist.service';
 })
 export class WishlistComponent implements OnInit, OnDestroy{
   wishlistData: Product[] = [];
-  private productsSubscription: Subscription | undefined;
+  productsSubscription: Subscription | undefined;
   errorMessage: string = 'No products found in wishlist. Please add product.';
   constructor(
     private service: ProductService,
@@ -24,7 +24,7 @@ export class WishlistComponent implements OnInit, OnDestroy{
   }
  
   getWishlistProducts(){
-    this.wishlistService.wishlistItems$.subscribe((idsArray)=> {
+    this.wishlistService.getWishlist().subscribe((idsArray)=> {
       this.productsSubscription = this.service.getProducts().subscribe({
         next: (data: Product[]) => { this.wishlistData = data.filter(item => idsArray?.includes(item.id)); },
         error: (error: string) => { this.errorMessage = error; },

@@ -41,14 +41,14 @@ export class CategoryComponent implements OnInit, AfterContentChecked, OnDestroy
   }
  
   getWishlistItemCount(){
-    this.cartService.cartItems$.subscribe((cartItems)=> { 
-      this.cartItemCount = cartItems.length
+    this.wishlistService.getWishlist().subscribe((wishlistItems)=> { 
+      this.wishlistItemCount = wishlistItems.length;
     })
   }
  
   getCartItemCount(){
-    this.wishlistService.wishlistItems$.subscribe((wishlistItems)=> { 
-      this.wishlistItemCount = wishlistItems.length
+    this.cartService.cartItems$.subscribe((cartItems)=> { 
+      this.cartItemCount = cartItems.length
     })
   }
 

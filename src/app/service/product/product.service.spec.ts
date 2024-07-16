@@ -23,7 +23,7 @@ describe('ProductService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should fetch data from API', () => {
+  it('should fetch product data from API', () => {
     const mockData = [
       {
         "id": 8,
@@ -55,5 +55,35 @@ describe('ProductService', () => {
     expect(req.request.method).toEqual('GET');
 
     req.flush(mockData); // Simulate response
+  });
+
+  it('should fetch categroy wise product data from API', (done) => {
+    const mockData = [
+      {
+        "id": 8,
+        "name": "SAMSUNG Galaxy",
+        "price": 10000,
+        "rating": 4,
+        "categoryId": 1,
+        "img": "https://media-ik.croma.com/prod/https://media.croma.com/image/upload/v1705640892/Croma%20Assets/Communication/Mobiles/Images/303817_cc5lmd.png?tr=w-640",
+        "description": "Behold the Samsung Galaxy S24 Ultra smartphone, an exceptional amalgamation of incredible technology and superior sophistication. Whether you're typing up a storm or jotting something down, Note Assist makes a long story short. Behold the Samsung Galaxy S24 Ultra smartphone, an exceptional amalgamation of incredible technology and superior sophistication. Whether you're typing up a storm or jotting something down, Note Assist makes a long story short.",
+        "brand_id": 8
+      }
+    ]
+
+    service.getProducts({'categoryId':1}).subscribe(data => {
+      expect(data).toBeTruthy();
+      expect(data).toEqual(mockData);
+      done();
+    });
+
+    const req = httpTestingController.expectOne('http://localhost:3000/products?categoryId=1');
+    expect(req.request.method).toEqual('GET');
+
+    req.flush(mockData); // Simulate response
+  });
+
+  afterEach(() => {
+    httpTestingController.verify();
   });
 });

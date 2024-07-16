@@ -13,6 +13,8 @@ import { StoreModule } from '@ngrx/store';
 import { CardModule } from './card/card.module';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { appReducer } from './store/app.state';
+import { ProductEffect } from './product/state/product.effect';
 
 @NgModule({
   declarations: [
@@ -27,8 +29,8 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
     CardModule,
     FilterModule,
     AppRoutingModule,
-    StoreModule.forRoot({}, {}),
-    EffectsModule.forRoot([]),
+    StoreModule.forRoot(appReducer),
+    EffectsModule.forRoot([ProductEffect]),
     StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: !isDevMode() })
   ],
   providers: [

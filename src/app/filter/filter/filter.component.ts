@@ -44,7 +44,7 @@ export class FilterComponent implements OnInit, OnDestroy{
   }
 
   filterBrands() {
-    this.filterService.updateFilter(this.searchTerm);
+    this.filterService.updateNameFilter(this.searchTerm);
   }
 
   rangeSelectionApply(){
@@ -77,12 +77,10 @@ export class FilterComponent implements OnInit, OnDestroy{
     });  
   }
   onselectbrand(event: Event) {
-    console.log((event.target  as HTMLInputElement).value);
     this.filterService.addSelectedBrandFilter(parseInt((event.target  as HTMLInputElement).value));
   }
   toggleDropdown() {
     this.toggleDropdownFlag = !this.toggleDropdownFlag;
-    console.log(this.toggleDropdownFlag);
   }
   ngOnDestroy(): void { }
 }

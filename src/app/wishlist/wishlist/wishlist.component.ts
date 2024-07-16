@@ -12,7 +12,7 @@ import { WishlistService } from '../../service/wishlist/wishlist.service';
 })
 export class WishlistComponent implements OnInit, OnDestroy{
   wishlistData: Product[] = [];
-  private productsSubscription: Subscription | undefined;
+  productsSubscription: Subscription | undefined;
   errorMessage: string = 'No products found in wishlist. Please add product.';
   constructor(
     private service: ProductService,

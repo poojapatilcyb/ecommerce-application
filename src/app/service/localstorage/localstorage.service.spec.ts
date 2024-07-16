@@ -71,4 +71,20 @@ describe('LocalstorageService', () => {
     expect(service.isLocalStorageAvailable()).toBe(true);
     expect(localStorage.getItem('testKey')).toBe(null);
   });
+
+  it('should return false if localStorage is not available', () => {
+    const mockSetItem = jest.spyOn(localStorage, 'setItem');
+    mockSetItem.mockImplementation(() => { throw new Error('Test error'); });
+    const result = service.isLocalStorageAvailable();
+    expect(result).toBe(false);
+    expect(mockSetItem).toHaveBeenCalled();
+    mockSetItem.mockRestore();
+  });
+
+  it('should return null when localStorage is not available', () => {
+    jest.spyOn(service, 'isLocalStorageAvailable').mockReturnValue(false);
+    const result = service.getItem('anyKey');
+    expect(result).toBeNull();
+  });
+
 });

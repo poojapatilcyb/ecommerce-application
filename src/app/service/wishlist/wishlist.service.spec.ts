@@ -6,6 +6,7 @@ import { LocalstorageService } from '../localstorage/localstorage.service';
 describe('WishlistService', () => {
   let service: WishlistService;
   let localStorageService: LocalstorageService;
+
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
@@ -14,21 +15,11 @@ describe('WishlistService', () => {
       ]
     });
     localStorageService = TestBed.inject(LocalstorageService);
-    const mockLocalStorage = (() => {
-      let store: Record<string, string> = {};
-
-      return {
-        getItem: (key: string) => (key in store ? store[key] : null),
-        setItem: (key: string, value: string) => (store[key] = value),
-        removeItem: (key: string) => delete store[key],
-        clear: () => (store = {}),
-      };
-    })();
-
-    Object.defineProperty(window, 'localStorage', {
-      value: mockLocalStorage,
-    });
     service = TestBed.inject(WishlistService);
+  });
+
+  afterEach(() => {
+    localStorage.clear(); // Clear localStorage after each test
   });
 
   it('should add item to empty wishlist', () => {
@@ -69,13 +60,12 @@ describe('WishlistService', () => {
   it('should remove item from wishlist', () => {
     const id = 1;
     const initialItems = [1, 2, 3];
-
+    localStorageService.setItem('wishlistItemIds', JSON.stringify(initialItems));
     let mockdata = initialItems;
     const indexToRemove = initialItems.indexOf(id);
     if(indexToRemove>=0) {
       mockdata.splice(indexToRemove, 1);
     }
-
     service.removeFromWishlist(id);
     expect(localStorageService.getItem('wishlistItemIds')).toEqual(JSON.stringify(mockdata));
   });
@@ -89,7 +79,7 @@ describe('WishlistService', () => {
     expect(localStorageService.getItem('wishlistItemIds')).toEqual(JSON.stringify(initialItems));
   });
 
-  it('should remove item from wishlist', () => {
+  it('should remove item single element from wishlist', () => {
     const id = 1;
     localStorageService.setItem('wishlistItemIds', JSON.stringify([id]));
     const wishlistItemsSpy = jest.spyOn(service['wishlistItemsSubject'], 'next');
